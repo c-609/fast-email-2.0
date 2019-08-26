@@ -1,7 +1,12 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
     <router-view/>
+    <van-tabbar v-model="active" v-show="this.$route.meta.showTabbar">
+      <van-tabbar-item icon="home-o" to="/home">首页</van-tabbar-item>
+      <van-tabbar-item icon="search" to="/message">收到</van-tabbar-item>
+      <van-tabbar-item icon="friends-o" to="/send">发出</van-tabbar-item>
+      <van-tabbar-item icon="setting-o" to="/mine">我的</van-tabbar-item>
+      </van-tabbar>
   </div>
 </template>
 
@@ -9,6 +14,7 @@
 export default {
   name: 'App'
 }
+
 </script>
 
 <style>

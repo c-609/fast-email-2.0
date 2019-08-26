@@ -1,6 +1,6 @@
 <template>
   <div>
-      Send
+      newMsg
   </div>
 </template>
 
