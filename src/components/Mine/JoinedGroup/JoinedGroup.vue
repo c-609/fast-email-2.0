@@ -1,7 +1,7 @@
 <template>
-  <div>
-      newMsg
-  </div>
+  <dir>
+      查看我加入的群组
+  </dir>
 </template>
 
 <script>

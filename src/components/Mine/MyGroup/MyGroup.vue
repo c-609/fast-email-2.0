@@ -1,10 +1,8 @@
 <template>
   <div>
-      Send
+      查看我创建的群组
       <hr>
-      <button @click="goPath('/sent_msg')">查看已发出的通知</button>
-      <hr>
-      <button @click="goPath('/edit_msg')">编辑一条新的通知</button>      
+      <button @click="goPath('/create_group')">创建一个新的群组</button>
   </div>
 </template>
 

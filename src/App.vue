@@ -1,6 +1,8 @@
 <template>
   <div id="app">
-    <router-view/>
+    <transition :name="transitionName">
+      <router-view class="child-view"/>
+    </transition>
     <van-tabbar v-model="active" v-show="this.$route.meta.showTabbar">
       <van-tabbar-item icon="home-o" to="/home">首页</van-tabbar-item>
       <van-tabbar-item icon="search" to="/message">收到</van-tabbar-item>
@@ -12,12 +14,29 @@
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  data(){
+    return{
+      transitionName: 'slide-right'
+    }
+  },
+
+watch: {
+    $route(to, from) {
+        // console.log(to.meta.index,from.meta.index)
+        if (to.meta.index > from.meta.index) {
+            this.transitionName = "slide-left";
+        } else {
+            this.transitionName = "slide-right";
+        }
+    }
+},
+
 }
 
 </script>
 
-<style>
+<style >
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -26,4 +45,20 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
+.child-view {
+    position: absolute;
+    width:100%;
+    transition: all 0.2s ;
+}
+.slide-left-enter, .slide-right-leave-active {
+    opacity: 0;
+    -webkit-transform: translate(100%, 0);
+    transform: translate(100%, 0);
+}
+.slide-right-enter,.slide-left-leave-active{
+    opacity: 0; 
+    -webkit-transform: translate(-100%, 0);
+    transform: translate(-100%, 0);
+}
+
 </style>
