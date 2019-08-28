@@ -4,7 +4,7 @@
       <router-view class="child-view"/>
     </transition>
     <van-tabbar v-model="active" v-show="this.$route.meta.showTabbar">
-      <van-tabbar-item icon="home-o" to="/home">首页</van-tabbar-item>
+      <van-tabbar-item icon="search"  to="/home">首页</van-tabbar-item>
       <van-tabbar-item icon="search" to="/message">收到</van-tabbar-item>
       <van-tabbar-item icon="friends-o" to="/send">发出</van-tabbar-item>
       <van-tabbar-item icon="setting-o" to="/mine">我的</van-tabbar-item>
@@ -17,7 +17,11 @@ export default {
   name: 'App',
   data(){
     return{
-      transitionName: 'slide-right'
+      transitionName: 'slide-right',
+      home: {
+        normal: '//./assets/4.png',
+        active: '//./assets/4.png'
+      }
     }
   },
 
@@ -37,28 +41,21 @@ watch: {
 </script>
 
 <style >
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
 .child-view {
     position: absolute;
-    width:100%;
+    width: 100%;
     transition: all 0.2s ;
 }
 .slide-left-enter, .slide-right-leave-active {
     opacity: 0;
-    -webkit-transform: translate(100%, 0);
-    transform: translate(100%, 0);
+    -webkit-transform: translate(50%, 0);
+    transform: translate(50%, 0);
 }
 .slide-right-enter,.slide-left-leave-active{
     opacity: 0; 
-    -webkit-transform: translate(-100%, 0);
-    transform: translate(-100%, 0);
+    -webkit-transform: translate(-50%, 0);
+    transform: translate(-50%, 0);
 }
 
 </style>
