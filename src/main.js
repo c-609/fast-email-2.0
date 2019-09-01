@@ -8,6 +8,7 @@ import 'vant/lib/index.css';
 import  FastClick  from  'fastclick'
 import 'lib-flexible/flexible' 
 import eventBus from './util/eventBus'
+import store from "./store/index";
 FastClick.attach(document.body);
 Vue.config.productionTip = false
 
@@ -18,7 +19,7 @@ Vue.use(Vant);
 new Vue({
   el: '#app',
   router,
-
+  store,
   components: { App },
   template: '<App/>'
 })

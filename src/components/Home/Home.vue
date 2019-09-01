@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <van-tabs v-model="active" sticky swipeable :border="false" animated :line-height="2" > 
+    <van-tabs v-model="tab" sticky swipeable :border="false" animated :line-height="2" > 
         <van-tab >
             <div slot="title">
                 新到通知
@@ -77,7 +77,7 @@ export default {
     },
     data() {
         return {
-            active: 0,
+            tab:this.$store.state.tab,
             receiveMsgs:[ //新到通知
                 {
                     title:"查寝",
@@ -131,6 +131,7 @@ export default {
         }
     },
     beforeDestroy() {
+        this.$store.commit("getTab",this.tab);
         eventBus.$emit("receiveMsgDetail",this.msg);
         eventBus.$emit("sendMsgDetail",this.msg);
     },
