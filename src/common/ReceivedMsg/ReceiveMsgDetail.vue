@@ -43,17 +43,18 @@ export default{
   data(){
     return{
       msg:'' ,//通知对象，包含通知所有内容
+      isSahre: false,//是否转发
     }
   },
   created(){
     eventBus.$on("receiveMsgDetail",(res=>{
-        console.log(res);
         this.msg = res;
     }))
   },
   beforeDestroy() {
     eventBus.$off("receiveMsgDetail");
-    eventBus.$emit("editMsg",this.msg);
+    if(this.isSahre == true)
+      eventBus.$emit("editMsg",this.msg);
   },
   methods:{
     //返回
@@ -63,6 +64,7 @@ export default{
 
     //转发,直接带msg进入发送页面，无需接口
     onClickRight(){
+      this.isSahre = true;
       this.$router.push("/edit_msg");
     }
   }

@@ -56,7 +56,7 @@ export default {
                 }
             ],
             msg:"",
-            search: "",
+            search: "", //搜索
         }
     },
     filters: {

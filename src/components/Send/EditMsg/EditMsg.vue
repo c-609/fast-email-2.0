@@ -48,16 +48,21 @@ export default {
       msg:'',
       show:false,
       persons:' 请选择',//收件人单元格提示语，如果选了人为 “已选择”
+      originalMsg:"",//原始的转发数据
     }
   },
   created(){
-    eventBus.$on("editMsg",res=>{
-      console.log(res);
+    eventBus.$on("editMsg",(res)=>{  
+      this.originalMsg = { ...res }; //es6语法，解决v-model数据双向绑定
       this.msg = res;
     });
   },
   beforeDestroy() {
     eventBus.$off("editMsg");
+    if(this.originalMsg != ""){
+      eventBus.$emit("receiveMsgDetail",this.originalMsg);
+      console.log(this.originalMsg);
+    }
   },
   methods:{
     //返回
@@ -67,7 +72,7 @@ export default {
 
     //发送通知
     onClickRight(){
-
+      
     },
 
     //打开发件身份弹出层时触发
