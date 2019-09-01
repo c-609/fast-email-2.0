@@ -14,7 +14,7 @@
                         :status="item.status"
                         :content="item.content"
                         :time="item.time"
-                        @click="clickReceiveMsg"
+                        @click="clickReceiveMsg(item)"
                     >
                     </base-msg-cell> 
                     </div>
@@ -33,7 +33,7 @@
                     :status="item.status"
                     :content="item.content"
                     :time="item.time"
-                    @click="clickSendMsg"
+                    @click="clickSendMsg(item)"
                 >
                 </base-msg-cell> 
                 </div>
@@ -62,6 +62,7 @@
 </template>
 
 <script>
+import eventBus from "../../util/eventBus"
 import BaseMsgCell from './../../common/BaseMsgCell'
 import BaseInviteCell from './../../common/BaseInviteCell'
 export default {
@@ -76,7 +77,7 @@ export default {
     },
     data() {
         return {
-            active: 2,
+            active: 0,
             receiveMsgs:[ //新到通知
                 {
                     title:"查寝",
@@ -124,16 +125,26 @@ export default {
             receiveNumber: 0,//新到通知数量
             sendNumber: 0, // 发送通知的数量
             inviteNumber: 0, //群组邀请消息数量
+
+            msg:"",
+            
         }
+    },
+    beforeDestroy() {
+        eventBus.$emit("receiveMsgDetail",this.msg);
+        eventBus.$emit("sendMsgDetail",this.msg);
     },
     methods:{
         //查看新到通知
-        clickReceiveMsg(){
+        clickReceiveMsg(e){
             this.receiveNumber--;
+            this.msg = e;
+            this.$router.push("/receive_msg_detail")
         },
         //查看送达中通知
-        clickSendMsg(){
-            this.sendNumber = this.sendMsgs.length;
+        clickSendMsg(e){
+            this.msg = e;
+            this.$router.push("/send_msg_detail")
         },
         //拒绝群组邀请
         clickRefuse(){

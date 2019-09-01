@@ -11,16 +11,19 @@
   <!-- 通知详情 -->
   <div class="detail">
     <van-field
+      disabled
       v-model="msg.title"
       label="通知标题"
       placeholder="通知标题"
     />
     <van-field
+      disabled
       v-model="msg.time"
       label="发布时间"
       placeholder="发布时间"
     />
     <van-field
+      disabled
       v-model="msg.sender"
       label="发布人"
       placeholder="发布人"
