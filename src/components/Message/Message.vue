@@ -6,6 +6,14 @@
             </van-nav-bar>
         </div>
 
+        <van-search
+            v-model="search"
+            placeholder="请输入搜索关键词"
+            shape="round"
+            @search="onSearch"
+            class="search"
+          ></van-search>
+
         <template v-for="(item,index) in msgList" >
             <base-msg-cell  
                 :key="index"
@@ -26,7 +34,7 @@
 
 <script>
 import  BaseMsgCell from "./../../common/BaseMsgCell"
-
+import eventBus from"./../../util/eventBus"
 export default {
     components: { 
         BaseMsgCell,
@@ -46,8 +54,9 @@ export default {
                     content:'nihao1', // 通知内容
                     time:'2019-8-91', // 时间
                 }
-            ]
-            
+            ],
+            msg:"",
+            search: "",
         }
     },
     filters: {
@@ -59,6 +68,9 @@ export default {
             }
             return value;
             }
+  },
+   beforeDestroy() {
+     eventBus.$emit("receiveMsgDetail",this.msg);
   },
     methods:{
         //删除
@@ -73,8 +85,15 @@ export default {
 
         //点击通知，查看详情
         clickMsg(e){
+            this.msg = e;
             this.$router.push("/receive_msg_detail")
-        }
+        },
+
+        onSearch() {},
+            timeChange(picker, value, index) {
+            this.select_time = picker.getValues();
+            console.log(picker.getValues());
+        },
     }
 }
 </script>

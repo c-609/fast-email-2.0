@@ -37,12 +37,23 @@
 </div>
 </template>
 <script>
+import eventBus from"./../../util/eventBus"
 export default{
   name:'ReceiveMsgDetail',
   data(){
     return{
       msg:'' ,//通知对象，包含通知所有内容
     }
+  },
+  created(){
+    eventBus.$on("receiveMsgDetail",(res=>{
+        console.log(res);
+        this.msg = res;
+    }))
+  },
+  beforeDestroy() {
+    eventBus.$off("receiveMsgDetail");
+    eventBus.$emit("editMsg",this.msg);
   },
   methods:{
     //返回

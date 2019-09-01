@@ -2,8 +2,9 @@
   <div>
       <!-- 头部 -->
     <div class="header">
-        <van-nav-bar title="发出"  >
-        </van-nav-bar>
+         <van-nav-bar title="发出"  @click-right="onClickRight">
+        <van-icon name="edit" slot="right" color="#191f25" size="18" />
+      </van-nav-bar>
     </div>
 
       <template v-for="(item,index) in msgList" >
@@ -24,6 +25,7 @@
 </template>
 
 <script>
+import eventBus from "./../../util/eventBus"
 import  BaseMsgCell from "./../../common/BaseMsgCell"
 export default {
     components:{
@@ -44,8 +46,8 @@ export default {
                     content:'nihao1', // 通知内容
                     time:'2019-8-91', // 时间
                 }
-            ]
-            
+            ],
+            msg:""
         }
     },
     filters: {
@@ -58,8 +60,15 @@ export default {
             return value;
             }
   },
+  beforeDestroy() {
+     eventBus.$emit("sendMsgDetail",this.msg);
+  },
   methods:{
-     //删除
+        //编辑通知
+        onClickRight(){
+            this.$router.push("/edit_msg");
+        },
+        //删除
         handleDelete(e){
             alert(e.title)
         },
@@ -71,6 +80,7 @@ export default {
 
         //点击通知，查看详情
         clickMsg(e){
+            this.msg = e;
             this.$router.push("/send_msg_detail")
         }
  }

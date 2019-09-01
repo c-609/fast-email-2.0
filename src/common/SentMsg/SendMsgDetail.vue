@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import eventBus from "./../../util/eventBus"
 export default {
   name: 'SendMsgDetail',
   data(){
@@ -37,6 +38,15 @@ export default {
        activeName: ["1"],
        msg: '' //通知对象
     }
+  },
+  created(){
+    eventBus.$on("sendMsgDetail",(res=>{
+        console.log(res);
+        this.msg = res;
+    }))
+  },
+  beforeDestroy() {
+    eventBus.$off("sendMsgDetail");
   },
    methods:{
     //返回

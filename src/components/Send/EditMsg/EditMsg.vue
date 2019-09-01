@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import eventBus from "./../../../util/eventBus"
 export default {
   name:'EditMsg',
   data(){
@@ -48,6 +49,15 @@ export default {
       show:false,
       persons:' 请选择',//收件人单元格提示语，如果选了人为 “已选择”
     }
+  },
+  created(){
+    eventBus.$on("editMsg",res=>{
+      console.log(res);
+      this.msg = res;
+    });
+  },
+  beforeDestroy() {
+    eventBus.$off("editMsg");
   },
   methods:{
     //返回
