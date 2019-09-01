@@ -18,7 +18,8 @@ import ViewAllMember from '@/components/Mine/MyGroup/ViewMyGroup/ViewAllMember'
 import JoinedGroup from '@/components/Mine/JoinedGroup/JoinedGroup'
 import ViewJoinedGroup from '@/components/Mine/JoinedGroup/ViewJoinedGroup'
 import CreateGroup from '@/components/Mine/MyGroup/CreateGroup/CreateGroup'
-
+import ReceiveMsgDetail from "../common/ReceivedMsg/ReceiveMsgDetail.vue"
+import SendMsgDetail from "../common/SentMsg/SendMsgDetail.vue"
 Vue.use(Router)
 
 
@@ -171,6 +172,23 @@ export default new Router({
       path:'/create_group',
       name:CreateGroup,
       component:CreateGroup,
+      meta:{
+        showTabbar:false
+      }
+    },
+    ,
+    {
+      path:'/receive_msg_detail',
+      name:ReceiveMsgDetail,
+      component:ReceiveMsgDetail,
+      meta:{
+        showTabbar:false
+      }
+    },
+    {
+      path:'/send_msg_detail',
+      name:SendMsgDetail,
+      component:SendMsgDetail,
       meta:{
         showTabbar:false
       }

@@ -1,12 +1,15 @@
 <template>
   <div>
+    
       查看接收到的通知
   </div>
+  
 </template>
 
 <script>
-export default {
 
+export default {
+  
 }
 </script>
 
