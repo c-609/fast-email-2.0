@@ -3,7 +3,7 @@
     <transition :name="transitionName">
       <router-view class="child-view"/>
     </transition>
-    <van-tabbar v-model="active" v-show="this.$route.meta.showTabbar">
+    <van-tabbar v-model="active" v-show="this.$route.meta.showTabbar" :border="false">
       <van-tabbar-item icon="search"  to="/home">首页</van-tabbar-item>
       <van-tabbar-item icon="search" to="/message">收到</van-tabbar-item>
       <van-tabbar-item icon="friends-o" to="/send">发出</van-tabbar-item>
@@ -41,11 +41,11 @@ watch: {
 </script>
 
 <style >
-
 .child-view {
     position: absolute;
     width: 100%;
     transition: all 0.2s ;
+    
 }
 .slide-left-enter, .slide-right-leave-active {
     opacity: 0;
@@ -57,5 +57,8 @@ watch: {
     -webkit-transform: translate(-50%, 0);
     transform: translate(-50%, 0);
 }
-
+.van-tabbar {
+  border-top: 1px solid #d2d2d2;
+  box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.1)
+}
 </style>

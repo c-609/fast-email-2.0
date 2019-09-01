@@ -13,7 +13,10 @@ import EditMsg from '@/components/Send/EditMsg/EditMsg'
 import ViewOrganization from '@/components/Mine/ViewOrganization/ViewOrganization'
 import RecycleBin from '@/components/Mine/RecycleBin/RecycleBin'
 import MyGroup from '@/components/Mine/MyGroup/MyGroup'
+import ViewMyGroup from '@/components/Mine/MyGroup/ViewMyGroup/ViewMyGroup'
+import ViewAllMember from '@/components/Mine/MyGroup/ViewMyGroup/ViewAllMember'
 import JoinedGroup from '@/components/Mine/JoinedGroup/JoinedGroup'
+import ViewJoinedGroup from '@/components/Mine/JoinedGroup/ViewJoinedGroup'
 import CreateGroup from '@/components/Mine/MyGroup/CreateGroup/CreateGroup'
 
 Vue.use(Router)
@@ -36,7 +39,7 @@ export default new Router({
         if(localStorage.getItem("login")) {
           return "/home"
         }else{
-          return "/login"
+          return "/home"
         }
       }
     },
@@ -128,6 +131,30 @@ export default new Router({
       path:'/my_group',
       name:MyGroup,
       component:MyGroup,
+      meta:{
+        showTabbar:false
+      }
+    },
+    {
+      path:'/view_my_group',
+      name:ViewMyGroup,
+      component:ViewMyGroup,
+      meta:{
+        showTabbar:false
+      }
+    },
+    {
+      path:'/view_joined_group',
+      name:ViewJoinedGroup,
+      component:ViewJoinedGroup,
+      meta:{
+        showTabbar:false
+      }
+    },
+    {
+      path:'/view_all_member',
+      name:ViewAllMember,
+      component:ViewAllMember,
       meta:{
         showTabbar:false
       }
