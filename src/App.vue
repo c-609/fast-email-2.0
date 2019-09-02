@@ -1,64 +1,64 @@
 <template>
   <div id="app">
     <transition :name="transitionName">
-      <router-view class="child-view"/>
+      <router-view class="child-view" />
     </transition>
     <van-tabbar v-model="active" v-show="this.$route.meta.showTabbar" :border="false">
-      <van-tabbar-item icon="search"  to="/home">首页</van-tabbar-item>
+      <van-tabbar-item icon="search" to="/home">首页</van-tabbar-item>
       <van-tabbar-item icon="search" to="/message">收到</van-tabbar-item>
       <van-tabbar-item icon="friends-o" to="/send">发出</van-tabbar-item>
       <van-tabbar-item icon="setting-o" to="/mine">我的</van-tabbar-item>
-      </van-tabbar>
+    </van-tabbar>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App',
-  data(){
-    return{
-      transitionName: 'slide-right',
+  name: "App",
+  data() {
+    return {
+      transitionName: "slide-right",
       home: {
-        normal: '//./assets/4.png',
-        active: '//./assets/4.png'
-      }
-    }
+        normal: "//./assets/4.png",
+        active: "//./assets/4.png"
+      },
+      active: 0
+    };
   },
 
-watch: {
+  watch: {
     $route(to, from) {
-        // console.log(to.meta.index,from.meta.index)
-        if (to.meta.index > from.meta.index) {
-            this.transitionName = "slide-left";
-        } else {
-            this.transitionName = "slide-right";
-        }
+      // console.log(to.meta.index,from.meta.index)
+      if (to.meta.index > from.meta.index) {
+        this.transitionName = "slide-left";
+      } else {
+        this.transitionName = "slide-right";
+      }
     }
-},
-
-}
-
+  }
+};
 </script>
 
 <style >
 .child-view {
-    position: absolute;
-    width: 100%;
-    transition: all 0.2s ;
-    
+  position: absolute;
+  width: 100%;
+  transition: all 0.2s;
 }
-.slide-left-enter, .slide-right-leave-active {
-    opacity: 0;
-    -webkit-transform: translate(50%, 0);
-    transform: translate(50%, 0);
+.slide-left-enter,
+.slide-right-leave-active {
+  opacity: 0;
+  -webkit-transform: translate(50%, 0);
+  transform: translate(50%, 0);
 }
-.slide-right-enter,.slide-left-leave-active{
-    opacity: 0; 
-    -webkit-transform: translate(-50%, 0);
-    transform: translate(-50%, 0);
+.slide-right-enter,
+.slide-left-leave-active {
+  opacity: 0;
+  -webkit-transform: translate(-50%, 0);
+  transform: translate(-50%, 0);
 }
 .van-tabbar {
   border-top: 1px solid #d2d2d2;
-  box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.1)
+  box-shadow: 0 -1px 4px rgba(0, 0, 0, 0.1);
 }
 </style>

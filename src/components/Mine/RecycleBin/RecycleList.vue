@@ -2,9 +2,7 @@
   <div>
     <!-- 头部 -->
     <div class="header">
-      <van-nav-bar title="发出" @click-right="onClickRight">
-        <van-icon name="edit" slot="right" color="#191f25" size="18" />
-      </van-nav-bar>
+      <van-nav-bar title="回收站" left-arrow @click-left="onClickLeft"></van-nav-bar>
     </div>
 
     <template v-for="(item,index) in msgList">
@@ -14,9 +12,8 @@
         :status="item.status"
         :content="item.content|ellipsis"
         :time="item.time"
-        statusRed="red"
+        :top="false"
         @handleDelete="handleDelete(item)"
-        @handleTop="handleTop(item)"
         @click="clickMsg(item)"
       ></base-msg-cell>
     </template>
@@ -24,9 +21,10 @@
 </template>
 
 <script>
-import eventBus from "./../../util/eventBus";
-import BaseMsgCell from "./../../common/BaseMsgCell";
+import BaseMsgCell from "../../../common/BaseMsgCell";
+import eventBus from "../../../util/eventBus";
 export default {
+  name: "RecycleList",
   components: {
     BaseMsgCell
   },
@@ -35,13 +33,13 @@ export default {
       msgList: [
         {
           title: "title", //通知标题
-          status: "1/5", // 通知状态或者未读人员比例
+          status: "weidu", // 通知状态或者未读人员比例
           content: "通知状态或者未读人员比例", // 通知内容
           time: "2019-8-9" // 时间
         },
         {
           title: "title1", //通知标题
-          status: "5/9",
+          status: "weidu1",
           content: "nihao1", // 通知内容
           time: "2019-8-91" // 时间
         }
@@ -60,40 +58,25 @@ export default {
     }
   },
   beforeDestroy() {
-    eventBus.$emit("sendMsgDetail", this.msg);
+    eventBus.$emit("receiveMsgDetail", this.msg);
   },
   methods: {
-    //编辑通知
-    onClickRight() {
-      this.$router.push("/edit_msg");
+    //返回
+    onClickLeft() {
+      this.$router.go(-1);
     },
     //删除
     handleDelete(e) {
       alert(e.title);
     },
-
-    //置顶
-    handleTop(e) {
-      alert("置顶");
-    },
-
     //点击通知，查看详情
     clickMsg(e) {
       this.msg = e;
-      this.$router.push("/send_msg_detail");
+      this.$router.push("/receive_msg_detail");
     }
   }
 };
 </script>
 
-<style scoped>
-.van-nav-bar {
-  background: #f6f6f6;
-}
-.van-nav-bar .van-icon {
-  color: #191f25;
-}
-.van-nav-bar__arrow {
-  font-size: 18px;
-}
+<style scoped >
 </style>
