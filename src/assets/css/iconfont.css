@@ -1,0 +1,66 @@
+@font-face {
+  font-family: 'my-icon';
+  src: url('./iconfont.ttf') format('truetype');
+}
+
+.my-icon {
+  font-family: 'my-icon';
+  position: relative;
+  font: 0.37333rem/1 "my-icon";
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+}
+
+.my-icon-edit:before {
+  content: "\e609";
+}
+
+.my-icon-50:before {
+  content: "\e6a0";
+}
+
+.my-icon-my:before {
+  content: "\e608";
+}
+
+.my-icon-organization:before {
+  content: "\e61f";
+}
+
+.my-icon-email:before {
+  content: "\e612";
+}
+
+.my-icon-home:before {
+  content: "\e653";
+}
+
+.my-icon-message:before {
+  content: "\e60d";
+}
+
+.my-icon-role:before {
+  content: "\e66d";
+}
+
+.my-icon-mygroup:before {
+  content: "\e673";
+}
+
+.my-icon-send:before {
+  content: "\e6a1";
+}
+
+.my-icon-tel:before {
+  content: "\e71f";
+}
+
+.my-icon-group:before {
+  content: "\e64b";
+}
+
+.my-icon-rec:before {
+  content: "\e620";
+}
+

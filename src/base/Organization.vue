@@ -45,6 +45,7 @@ export default {
     toggle() {
       if (this.isFolder) {
         this.open = !this.open;
+        this.$parent.onClickLeft();
       }
     }
   }
@@ -67,7 +68,6 @@ export default {
   margin-top: 46px;
 }
 .height1 {
-  height: 100vh;
-  width: 56vh;
+  
 }
 </style>

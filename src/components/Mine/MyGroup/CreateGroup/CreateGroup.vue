@@ -17,53 +17,16 @@
         <van-cell title="选择成员:" is-link value @click="choseMember()" />
       </van-cell-group>
     </div>
-
-    <div>
-      <ul>
-        <items v-for="(model, index) in list" :model="model" :key="index"></items>
-      </ul>
-    </div>
   </div>
 </template>
 
 <script>
-import items from "./Items";
+
 export default {
-  components: {
-    items
-  },
   data() {
     return {
       show: false,
-      list: [
-        {
-          id: "1",
-          menuName: "项目管理",
-          childTree: [
-            {
-              menuName: "项目进度",
-              childTree: [
-                {
-                  menuName: "项目一",
-                  childTree: [{ menuName: "详细信息" }]
-                }
-              ]
-            },
-            {
-              menuName: "任务安排"
-            }
-          ]
-        },
-        {
-          id: "2",
-          menuName: "数据统计"
-        },
-        {
-          id: "3",
-          menuName: "人员管理"
-        }
-      ]
-    };
+    }
   },
   methods: {
     onClickLeft() {

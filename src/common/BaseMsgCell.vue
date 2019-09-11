@@ -1,6 +1,6 @@
 <template>
   <div id="message">
-    <van-swipe-cell :disabled="disabled">
+    <van-swipe-cell :disabled="disabled" >
       <van-cell
         :border="false"
         :title="title"
@@ -8,6 +8,7 @@
         :label="content"
         :value-class="statusRed"
         @click="click"
+        class="click"
       ></van-cell>
       <span class="cell-time">{{time}}</span>
       <template slot="right">
@@ -87,5 +88,8 @@ export default {
 
 .red {
   color: red;
+}
+.click:active {
+  background-color: #f2f3f5;
 }
 </style>

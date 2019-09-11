@@ -3,7 +3,7 @@
     <!-- 头部 -->
     <div class="header">
       <van-nav-bar title="发出" @click-right="onClickRight">
-        <van-icon name="edit" slot="right" color="#191f25" size="18" />
+        <van-icon class-prefix="my-icon" name="edit" slot="right" color="red" size="18" />
       </van-nav-bar>
     </div>
 

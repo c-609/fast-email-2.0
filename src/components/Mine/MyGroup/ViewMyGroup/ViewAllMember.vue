@@ -60,7 +60,7 @@
         <van-icon name="cross" class="delete_icon" size="18"></van-icon>
       </div>
     </div>
-    <div class="add">
+    <div class="add" v-show="hidshow">
       <van-icon name="add" size="54" color="#ff9800"></van-icon>
     </div>
   </div>
@@ -68,6 +68,30 @@
 
 <script>
 export default {
+  data(){
+    return{
+      docmHeight: document.documentElement.clientHeight,  //默认屏幕高度
+      showHeight: document.documentElement.clientHeight,   //实时屏幕高度
+      hidshow:true,
+    }
+  },
+  mounted() {
+    // window.onresize监听页面高度的变化
+    window.onresize = ()=>{
+        return(()=>{
+            this.showHeight = document.documentElement.clientHeight;
+        })()
+    }
+  },
+  watch:{
+    showHeight() {
+      if(this.docmHeight != this.showHeight){
+          this.hidshow=false 
+      }else{
+        this.hidshow = true
+      }
+    },
+  },
   methods: {
     onClickLeft() {
       this.$router.push("/view_my_group");

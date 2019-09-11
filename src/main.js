@@ -9,6 +9,7 @@ import  FastClick  from  'fastclick'
 import 'lib-flexible/flexible' 
 import eventBus from './util/eventBus'
 import store from "./store/index";
+import "./assets/css/iconfont.css"
 FastClick.attach(document.body);
 Vue.config.productionTip = false
 

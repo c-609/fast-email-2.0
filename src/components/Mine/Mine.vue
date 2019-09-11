@@ -14,16 +14,16 @@
         <ul>
           <li>张三</li>
           <li>
-            <van-icon name="phone-o" />12857485983
+            <van-icon class-prefix="my-icon" name="tel" />  12857485983
           </li>
           <li>
-            <van-icon name="phone-o" />386596055
+            <van-icon class-prefix="my-icon" name="email" />  386596055@qq.com
           </li>
           <li>
-            <van-icon name="friends-o" />教务处
+            <van-icon class-prefix="my-icon" name="organization" />  教务处
           </li>
           <li>
-            <van-icon name="friends-o" />教务处处长
+            <van-icon class-prefix="my-icon" name="role" size="13" />  教务处处长
           </li>
         </ul>
       </div>
@@ -34,13 +34,33 @@
     </div>
     <div class="group">
       <van-cell-group>
-        <van-cell title="学院机构" is-link icon="phone-o" to="/view_organization" />
-        <van-cell title="我的群组" is-link icon="phone-o" to="/my_group" />
-        <van-cell title="我加入的群组" is-link icon="phone-o" :border="false" to="/joined_group" />
+        <van-cell  is-link to="/view_organization" >
+          <template slot="title">
+            <van-icon class-prefix="my-icon" name="organization" />
+            <span class="custom-title">学院机构</span>
+          </template>
+        </van-cell>
+        <van-cell is-link to="/my_group" >
+          <template slot="title">
+            <van-icon class-prefix="my-icon" name="group" />
+            <span class="custom-title">我的群组</span>
+          </template>
+        </van-cell>
+        <van-cell is-link :border="false" to="/joined_group">
+          <template slot="title">
+            <van-icon class-prefix="my-icon" name="mygroup" />
+            <span class="custom-title">我加入的群组</span>
+          </template>
+        </van-cell>
       </van-cell-group>
     </div>
     <div class="rec">
-      <van-cell title="回收站" is-link icon="other-pay" to="recycle_list" />
+      <van-cell is-link  to="recycle_list" >
+        <template slot="title">
+            <van-icon class-prefix="my-icon" name="rec" />
+            <span class="custom-title">回收站</span>
+          </template>
+      </van-cell>
     </div>
     <div class="logout">退出登录</div>
   </div>

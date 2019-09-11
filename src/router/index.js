@@ -11,7 +11,6 @@ import SentMsg from "@/common/SentMsg/SentMsg";
 import InviteMsg from "@/components/Home/InviteMsg/InviteMsg";
 import EditMsg from "@/components/Send/EditMsg/EditMsg";
 import ViewOrganization from "@/components/Mine/ViewOrganization/ViewOrganization";
-import RecycleBin from "@/components/Mine/RecycleBin/RecycleBin";
 import MyGroup from "@/components/Mine/MyGroup/MyGroup";
 import ViewMyGroup from "@/components/Mine/MyGroup/ViewMyGroup/ViewMyGroup";
 import ViewAllMember from "@/components/Mine/MyGroup/ViewMyGroup/ViewAllMember";
@@ -21,6 +20,7 @@ import CreateGroup from "@/components/Mine/MyGroup/CreateGroup/CreateGroup";
 import ReceiveMsgDetail from "../common/ReceivedMsg/ReceiveMsgDetail.vue";
 import SendMsgDetail from "../common/SentMsg/SendMsgDetail.vue";
 import RecycleList from "@/components/Mine/RecycleBin/RecycleList";
+import Organization from "@/test/Organization";
 Vue.use(Router);
 
 export default new Router({
@@ -84,7 +84,8 @@ export default new Router({
       name: ReceivedMsg,
       component: ReceivedMsg,
       meta: {
-        showTabbar: false
+        showTabbar: false,
+        index:5
       }
     },
     {
@@ -116,15 +117,8 @@ export default new Router({
       name: ViewOrganization,
       component: ViewOrganization,
       meta: {
-        showTabbar: false
-      }
-    },
-    {
-      path: "/recycle_bin",
-      name: RecycleBin,
-      component: RecycleBin,
-      meta: {
-        showTabbar: false
+        showTabbar: false,
+        index:5
       }
     },
     {
@@ -132,7 +126,8 @@ export default new Router({
       name: MyGroup,
       component: MyGroup,
       meta: {
-        showTabbar: false
+        showTabbar: false,
+        index:5
       }
     },
     {
@@ -140,7 +135,8 @@ export default new Router({
       name: ViewMyGroup,
       component: ViewMyGroup,
       meta: {
-        showTabbar: false
+        showTabbar: false,
+        index:6
       }
     },
     {
@@ -148,7 +144,8 @@ export default new Router({
       name: ViewJoinedGroup,
       component: ViewJoinedGroup,
       meta: {
-        showTabbar: false
+        showTabbar: false,
+        index:6
       }
     },
     {
@@ -164,7 +161,8 @@ export default new Router({
       name: JoinedGroup,
       component: JoinedGroup,
       meta: {
-        showTabbar: false
+        showTabbar: false,
+        index:5
       }
     },
     {
@@ -172,7 +170,8 @@ export default new Router({
       name: CreateGroup,
       component: CreateGroup,
       meta: {
-        showTabbar: false
+        showTabbar: false,
+        index:6
       }
     },
     ,
@@ -181,7 +180,8 @@ export default new Router({
       name: ReceiveMsgDetail,
       component: ReceiveMsgDetail,
       meta: {
-        showTabbar: false
+        showTabbar: false,
+        index:6
       }
     },
     {
@@ -189,13 +189,23 @@ export default new Router({
       name: SendMsgDetail,
       component: SendMsgDetail,
       meta: {
-        showTabbar: false
+        showTabbar: false,
+        index:5
       }
     },
     {
       path: "/recycle_list",
       name: RecycleList,
       component: RecycleList,
+      meta: {
+        showTabbar: false,
+        index:5
+      }
+    },
+    {
+      path: "/test1",
+      name: Organization,
+      component: Organization,
       meta: {
         showTabbar: false
       }
