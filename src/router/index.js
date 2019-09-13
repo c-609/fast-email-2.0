@@ -21,10 +21,19 @@ import ReceiveMsgDetail from "../common/ReceivedMsg/ReceiveMsgDetail.vue";
 import SendMsgDetail from "../common/SentMsg/SendMsgDetail.vue";
 import RecycleList from "@/components/Mine/RecycleBin/RecycleList";
 import Organization from "@/test/Organization";
+import Dexie from "@/test/Dexie"
 Vue.use(Router);
 
 export default new Router({
   routes: [
+    {
+      path: "/dexie",
+      name: "Dexie",
+      component: Dexie,
+      meta: {
+        showTabbar: false
+      }
+    },
     {
       path: "/login",
       name: "Login",

@@ -1,10 +1,10 @@
 <template>
   <div class="home">
-    <van-tabs v-model="tab" sticky swipeable :border="false" animated :line-height="2">
+    <van-tabs v-model="tab" sticky swipeable :border="false" animated :line-height="2" color="#3296fa">
       <van-tab>
         <div slot="title">
           新到通知
-          <span style="display:inline; color:red">{{receiveNumber}}</span>
+          <span style="display:inline; color:#ff943e">{{receiveNumber}}</span>
         </div>
         <div class="footer">
           <div v-for="(item,index) in receiveMsgs" :key="index">
@@ -22,14 +22,15 @@
       <van-tab>
         <div slot="title">
           送达中
-          <span style="display:inline; color:red">{{sendNumber}}</span>
+          <span style="display:inline; color:#ff943e">{{sendNumber}}</span>
         </div>
         <div class="footer">
           <div v-for="(item,index) in sendMsgs" :key="index">
             <base-msg-cell
               :disabled="true"
               :title="item.title"
-              :status="item.status"
+              :read="item.read"
+              :all="item.all"
               :content="item.content"
               :time="item.time"
               @click="clickSendMsg(item)"
@@ -40,7 +41,7 @@
       <van-tab>
         <div slot="title">
           群组邀请
-          <span style="display:inline; color:red">{{inviteNumber}}</span>
+          <span style="display:inline; color:#ff943e">{{inviteNumber}}</span>
         </div>
         <div class="footer invite">
           <div v-for="(item,index) in inviteMsgs" :key="index">
@@ -95,13 +96,15 @@ export default {
         // 送达中通知
         {
           title: "查寝",
-          status: "1/2",
+          read:"1",
+          all:"10",
           content: "今天晚上要查寝室啦",
           time: "2018-03-25"
         },
         {
           title: "查寝",
-          status: "1/2",
+          read: "2",
+          all:"2",
           content: "今天晚上要查寝室啦",
           time: "2018-03-25"
         }

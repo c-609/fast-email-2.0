@@ -42,13 +42,13 @@ export default {
       msgList: [
         {
           title: "title", //通知标题
-          status: "weidu", // 通知状态或者未读人员比例
+          status: "未读", // 通知状态或者未读人员比例
           content: "通知状态或者未读人员比例", // 通知内容
           time: "2019-8-9" // 时间
         },
         {
           title: "title1", //通知标题
-          status: "weidu1",
+          status: "已读",
           content: "nihao1", // 通知内容
           time: "2019-8-91" // 时间
         }

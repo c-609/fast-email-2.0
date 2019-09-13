@@ -1,16 +1,25 @@
 <template>
   <div id="message">
     <van-swipe-cell :disabled="disabled" >
+      <div class="status"></div>
       <van-cell
         :border="false"
         :title="title"
-        :value="status"
+        
         :label="content"
         :value-class="statusRed"
         @click="click"
         class="click"
       ></van-cell>
-      <span class="cell-time">{{time}}</span>
+      <div v-if="status!=null">
+      <van-tag color="#ff943e" class="status" v-if="status=='未读'">New</van-tag>
+      </div>
+
+      <div v-if="all!=null">
+      <van-tag color="#ff943e" class="status" v-if="read!=all" >{{read}}/{{all}}</van-tag>
+      <van-tag type="primary" class="status" v-if="read==all  " >已读完</van-tag>
+      </div>
+      <span class="cell_time">{{time}}</span>
       <template slot="right">
         <van-button square type="danger" class="btn" text="删除" @click="handleDelete" />
         <van-button square type="primary" class="btn" text="置顶" v-if="top" @click="handleTop" />
@@ -29,6 +38,14 @@ export default {
     },
     //通知状态或未读比例
     status: {
+      type: String
+    },
+    //已读人数
+    read:{
+      type: String
+    },
+    //总共人数
+    all:{
       type: String
     },
     //内容
@@ -74,8 +91,16 @@ export default {
 </script>
 
 <style scoped>
-.cell-time {
+.cell_time {
   margin-top: -28px;
+  margin-right: 15px;
+  position: relative;
+  z-index: 999;
+  float: right;
+  color: #969799
+}
+.status {
+  margin-top: -52px;
   margin-right: 15px;
   position: relative;
   z-index: 999;

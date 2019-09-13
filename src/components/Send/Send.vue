@@ -3,7 +3,7 @@
     <!-- 头部 -->
     <div class="header">
       <van-nav-bar title="发出" @click-right="onClickRight">
-        <van-icon class-prefix="my-icon" name="edit" slot="right" color="red" size="18" />
+        <van-icon class-prefix="my-icon" name="edit" slot="right" color="#3296fa" size="18" />
       </van-nav-bar>
     </div>
 
@@ -11,7 +11,8 @@
       <base-msg-cell
         :key="index"
         :title="item.title"
-        :status="item.status"
+        :read="item.read"
+        :all="item.all"
         :content="item.content|ellipsis"
         :time="item.time"
         statusRed="red"
@@ -35,13 +36,15 @@ export default {
       msgList: [
         {
           title: "title", //通知标题
-          status: "1/5", // 通知状态或者未读人员比例
+          read:'1', // 通知状态或者未读人员比例
+          all:'5',
           content: "通知状态或者未读人员比例", // 通知内容
           time: "2019-8-9" // 时间
         },
         {
           title: "title1", //通知标题
-          status: "5/9",
+          read: '2',
+          all: '2',
           content: "nihao1", // 通知内容
           time: "2019-8-91" // 时间
         }

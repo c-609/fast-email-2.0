@@ -2,21 +2,22 @@
   <div>
     <!-- 头部 -->
     <div class="header">
-      <van-nav-bar title="回收站" left-arrow @click-left="onClickLeft"></van-nav-bar>
+      <van-nav-bar title="回收站" left-arrow @click-left="onClickLeft" fixed></van-nav-bar>
     </div>
-
-    <template v-for="(item,index) in msgList">
-      <base-msg-cell
-        :key="index"
-        :title="item.title"
-        :status="item.status"
-        :content="item.content|ellipsis"
-        :time="item.time"
-        :top="false"
-        @handleDelete="handleDelete(item)"
-        @click="clickMsg(item)"
-      ></base-msg-cell>
-    </template>
+    <div class="content">
+      <template v-for="(item,index) in msgList" class="content">
+        <base-msg-cell
+          :key="index"
+          :title="item.title"
+          :status="item.status"
+          :content="item.content|ellipsis"
+          :time="item.time"
+          :top="false"
+          @handleDelete="handleDelete(item)"
+          @click="clickMsg(item)"
+        ></base-msg-cell>
+      </template>
+    </div>
   </div>
 </template>
 
@@ -79,4 +80,24 @@ export default {
 </script>
 
 <style scoped >
+.content {
+  margin-top: 44px;
+}
+.joinedGroup {
+  width: 100%;
+  height: 100%;
+  background-color: #f6f6f6;
+}
+.van-nav-bar {
+  background-color: #f6f6f6;
+}
+.header {
+  border-bottom: 1px solid #d2d2d2;
+}
+.van-nav-bar .van-icon {
+  color: #191f25;
+}
+.van-nav-bar__arrow {
+  font-size: 18px;
+}
 </style>

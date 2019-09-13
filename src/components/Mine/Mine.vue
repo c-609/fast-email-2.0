@@ -14,16 +14,16 @@
         <ul>
           <li>张三</li>
           <li>
-            <van-icon class-prefix="my-icon" name="tel" />  12857485983
+            <van-icon class-prefix="my-icon" name="tel" color="#3296fa"/>  12857485983
           </li>
           <li>
-            <van-icon class-prefix="my-icon" name="email" />  386596055@qq.com
+            <van-icon class-prefix="my-icon" name="email" color="#15bc83"/>  386596055@qq.com
           </li>
           <li>
-            <van-icon class-prefix="my-icon" name="organization" />  教务处
+            <van-icon class-prefix="my-icon" name="organization"  color="#f25643" />  教务处
           </li>
           <li>
-            <van-icon class-prefix="my-icon" name="role" size="13" />  教务处处长
+            <van-icon class-prefix="my-icon" name="role" size="13" color="#ff943e"/>  教务处处长
           </li>
         </ul>
       </div>
@@ -36,19 +36,19 @@
       <van-cell-group>
         <van-cell  is-link to="/view_organization" >
           <template slot="title">
-            <van-icon class-prefix="my-icon" name="organization" />
+            <van-icon class-prefix="my-icon" name="organization" color="#3296fa"/>
             <span class="custom-title">学院机构</span>
           </template>
         </van-cell>
         <van-cell is-link to="/my_group" >
           <template slot="title">
-            <van-icon class-prefix="my-icon" name="group" />
+            <van-icon class-prefix="my-icon" name="group" color="#15bc83"/>
             <span class="custom-title">我的群组</span>
           </template>
         </van-cell>
         <van-cell is-link :border="false" to="/joined_group">
           <template slot="title">
-            <van-icon class-prefix="my-icon" name="mygroup" />
+            <van-icon class-prefix="my-icon" name="mygroup" color="#ff943e" />
             <span class="custom-title">我加入的群组</span>
           </template>
         </van-cell>
@@ -57,7 +57,7 @@
     <div class="rec">
       <van-cell is-link  to="recycle_list" >
         <template slot="title">
-            <van-icon class-prefix="my-icon" name="rec" />
+            <van-icon class-prefix="my-icon" name="rec" color="#f25643"/>
             <span class="custom-title">回收站</span>
           </template>
       </van-cell>

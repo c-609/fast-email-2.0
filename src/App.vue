@@ -3,7 +3,7 @@
     <transition :name="transitionName">
       <router-view class="child-view" />
     </transition>
-    <van-tabbar v-model="active" v-show="this.$route.meta.showTabbar" v-if="hidshow" :border="false" active-color="red">
+    <van-tabbar v-model="active" v-show="this.$route.meta.showTabbar" v-if="hidshow" :border="false" active-color="#f25643">
       <van-tabbar-item to="/home"> 
         <van-icon class="iconfont" class-prefix='my-icon' slot="icon" slot-scope="props" :name='props.active ? icon.home_active:icon.home_normal'></van-icon>
         <span>首页</span>
