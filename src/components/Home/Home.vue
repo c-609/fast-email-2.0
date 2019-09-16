@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
     <van-tabs v-model="tab" sticky swipeable :border="false" animated :line-height="2" color="#3296fa">
       <van-tab>
         <div slot="title">
@@ -10,7 +11,7 @@
           <div v-for="(item,index) in receiveMsgs" :key="index">
             <base-msg-cell
               :disabled="true"
-              :title="item.title"
+              :title="item.senderName"
               :status="item.status"
               :content="item.content"
               :time="item.time"
@@ -19,24 +20,28 @@
           </div>
         </div>
       </van-tab>
+     
       <van-tab>
         <div slot="title">
           送达中
           <span style="display:inline; color:#ff943e">{{sendNumber}}</span>
         </div>
         <div class="footer">
+         
           <div v-for="(item,index) in sendMsgs" :key="index">
             <base-msg-cell
               :disabled="true"
               :title="item.title"
-              :read="item.read"
-              :all="item.all"
+              :read="item.readNum"
+              :all="item.number"
               :content="item.content"
               :time="item.time"
               @click="clickSendMsg(item)"
             ></base-msg-cell>
           </div>
+          
         </div>
+         
       </van-tab>
       <van-tab>
         <div slot="title">
@@ -56,7 +61,9 @@
           </div>
         </div>
       </van-tab>
+      
     </van-tabs>
+     </van-pull-refresh>
   </div>
 </template>
 
@@ -64,10 +71,37 @@
 import eventBus from "../../util/eventBus";
 import BaseMsgCell from "./../../common/BaseMsgCell";
 import BaseInviteCell from "./../../common/BaseInviteCell";
+import {getUnreadMsg,getSendingMsg} from "../../api/message"
+import IDBMethods from "../../api/IndexedDbMethods"
 export default {
   components: {
     BaseMsgCell,
     BaseInviteCell
+  },
+  created(){
+    let dbName = localStorage.getItem('userId')+"NewMsg";
+    IDBMethods.getAllMsg(dbName,"NewMsg",0,result=>{
+      this.receiveMsgs = result;
+    })
+  },
+  mounted(){
+    let userId = localStorage.getItem('userId');
+    let dbName = userId+"NewMsg"
+    IDBMethods.getAllMsgID(dbName,"NewMsg",result=>{
+      getUnreadMsg(userId,result).then(res=>{
+        if(res.data.data){
+          let msg = res.data.data;
+          for(var i=0; i<msg.length; i++){
+            this.receiveMsgs.unshift(msg[i]);
+          }
+          
+          IDBMethods.addNewMsg(dbName,"NewMsg",res.data.data);
+        }
+    })
+    })
+    getSendingMsg(userId).then(res=>{
+      this.sendMsgs = res.data.data;
+    })
   },
   methods: {
     goPath(url) {
@@ -76,39 +110,10 @@ export default {
   },
   data() {
     return {
+      isLoading:false,
       tab: this.$store.state.tab,
-      receiveMsgs: [
-        //新到通知
-        {
-          title: "查寝",
-          status: "未读",
-          content: "今天晚上要查寝室啦",
-          time: "2018-03-25"
-        },
-        {
-          title: "查寝",
-          status: "未读",
-          content: "今天晚上要查寝室啦",
-          time: "2018-03-25"
-        }
-      ],
-      sendMsgs: [
-        // 送达中通知
-        {
-          title: "查寝",
-          read:"1",
-          all:"10",
-          content: "今天晚上要查寝室啦",
-          time: "2018-03-25"
-        },
-        {
-          title: "查寝",
-          read: "2",
-          all:"2",
-          content: "今天晚上要查寝室啦",
-          time: "2018-03-25"
-        }
-      ],
+      receiveMsgs: [],
+      sendMsgs:'',
       inviteMsgs: [
         //群组邀请消息
         {
@@ -139,6 +144,30 @@ export default {
     eventBus.$emit("sendMsgDetail", this.msg);
   },
   methods: {
+    onRefresh(){
+      let userId = localStorage.getItem('userId');
+      let dbName = userId+"NewMsg"
+      let _this = this;
+      IDBMethods.getAllMsgID(dbName,"NewMsg",result=>{
+        getUnreadMsg(userId,result).then(res=>{
+          if(res.data.data){
+            let msg = res.data.data;
+            for(var i=0; i<msg.length; i++){
+              this.receiveMsgs.unshift(msg[i]);
+            }
+            IDBMethods.addNewMsg(dbName,"NewMsg",res.data.data);
+            this.$notify({ type: 'primary', message: '刷新成功',duration:500 });
+            this.isLoading = false;
+          }else if(res.data.msg == '没有未读消息'){
+            this.$notify({ type: 'primary', message: '刷新成功',duration:500 });
+            this.isLoading = false;
+          }
+        })
+      })
+    getSendingMsg(userId).then(res=>{
+      this.sendMsgs = res.data.data;
+    })
+    },
     //查看新到通知
     clickReceiveMsg(e) {
       this.receiveNumber--;
@@ -167,7 +196,6 @@ export default {
   margin: 0;
   padding: 0;
 }
-
 .van-tabs {
   margin-top: 10px;
 }

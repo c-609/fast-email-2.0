@@ -1,13 +1,13 @@
 <template>
   <div class="viewMyGroup">
     <div class="header">
-      <van-nav-bar title="查寝群" left-arrow @click-left="onClickLeft">
+      <van-nav-bar :title="groupInfo.groupName" left-arrow @click-left="onClickLeft">
         <van-icon name="delete" slot="right" color="#191f25" size="18" />
       </van-nav-bar>
     </div>
     <div class="groupInfo">
-      <p>群组名称: 信息院查寝群</p>
-      <p>创建时间: 2019-08-80 16:45:43</p>
+      <p>群组名称: {{groupInfo.groupName}}</p>
+      <p>创建时间: {{groupInfo.createTime}}</p>
     </div>
     <div class="member">
       <van-cell title="查看所有成员" icon="friends-o" is-link value="24人" @click="view_all_member()" />
@@ -23,12 +23,30 @@
 </template>
 
 <script>
+import eventBus from "../../../../util/eventBus"
 export default {
+  data(){
+    return{
+      groupInfo:'',
+      memberList:'',
+    }
+  },
+  created() {
+    eventBus.$on("groupMsg", res => {   
+      this.groupInfo = res;
+      this.memberList = res.userInfoEntityList;
+    });
+  },
+   beforeDestroy() {
+    eventBus.$off("groupMsg");
+  },
   methods: {
     onClickLeft() {
       this.$router.push("/my_group");
     },
     view_all_member() {
+      eventBus.$emit("memberList", this.memberList);
+      console.log(this.memberList)
       this.$router.push("/view_all_member");
     }
   }

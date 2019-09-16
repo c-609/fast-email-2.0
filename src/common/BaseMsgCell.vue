@@ -12,7 +12,7 @@
         class="click"
       ></van-cell>
       <div v-if="status!=null">
-      <van-tag color="#ff943e" class="status" v-if="status=='未读'">New</van-tag>
+      <van-tag color="#ff943e" class="status" v-if="status=='0'">New</van-tag>
       </div>
 
       <div v-if="all!=null">
@@ -38,15 +38,15 @@ export default {
     },
     //通知状态或未读比例
     status: {
-      type: String
+      type: Number
     },
     //已读人数
     read:{
-      type: String
+      type: Number
     },
     //总共人数
     all:{
-      type: String
+      type: Number
     },
     //内容
     content: {

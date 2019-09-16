@@ -2,53 +2,49 @@
   <div>
     <!-- 头部 -->
     <div class="header">
-      <van-nav-bar title="发出" @click-right="onClickRight">
-        <van-icon class-prefix="my-icon" name="edit" slot="right" color="#3296fa" size="18" />
+      <van-nav-bar title="发出" @click-right="onClickRight" fixed>
+        <van-icon class-prefix="my-icon" name="edit" slot="right" color="#191f25" size="18" />
       </van-nav-bar>
     </div>
-
-    <template v-for="(item,index) in msgList">
-      <base-msg-cell
-        :key="index"
-        :title="item.title"
-        :read="item.read"
-        :all="item.all"
-        :content="item.content|ellipsis"
-        :time="item.time"
-        statusRed="red"
-        @handleDelete="handleDelete(item)"
-        @handleTop="handleTop(item)"
-        @click="clickMsg(item)"
-      ></base-msg-cell>
-    </template>
+      <van-pull-refresh v-model="isLoading" @refresh="onRefresh"> 
+        <van-search
+            v-model="search"
+            placeholder="请输入搜索关键词"
+            shape="round"
+            @search="onSearch"
+            class="search"
+        ></van-search>
+        <template v-for="(item,index) in msgList">
+          <base-msg-cell
+            :key="index"
+            :title="item.title"
+            :read="item.readNum"
+            :all="item.number"
+            :content="item.content|ellipsis"
+            :time="item.time"
+            statusRed="red"
+            @handleDelete="handleDelete(item)"
+            @handleTop="handleTop(item)"
+            @click="clickMsg(item)"
+          ></base-msg-cell>
+        </template>
+      </van-pull-refresh>
   </div>
 </template>
 
 <script>
 import eventBus from "./../../util/eventBus";
 import BaseMsgCell from "./../../common/BaseMsgCell";
+import {getSendingMsg} from "../../api/message"
 export default {
   components: {
     BaseMsgCell
   },
   data() {
     return {
-      msgList: [
-        {
-          title: "title", //通知标题
-          read:'1', // 通知状态或者未读人员比例
-          all:'5',
-          content: "通知状态或者未读人员比例", // 通知内容
-          time: "2019-8-9" // 时间
-        },
-        {
-          title: "title1", //通知标题
-          read: '2',
-          all: '2',
-          content: "nihao1", // 通知内容
-          time: "2019-8-91" // 时间
-        }
-      ],
+      isLoading:false,
+      search:'',
+      msgList:'',
       msg: ""
     };
   },
@@ -65,7 +61,20 @@ export default {
   beforeDestroy() {
     eventBus.$emit("sendMsgDetail", this.msg);
   },
+  created(){
+    let userId = localStorage.getItem('userId');
+    getSendingMsg(userId).then(res=>{
+      this.msgList = res.data.data;
+    })
+  },
   methods: {
+    onSearch(){},
+    onRefresh(){
+      setTimeout(() => {
+        this.$notify({ type: 'primary', message: '刷新成功',duration:500 });
+        this.isLoading = false;
+      }, 300);
+    },
     //编辑通知
     onClickRight() {
       this.$router.push("/edit_msg");
@@ -90,6 +99,9 @@ export default {
 </script>
 
 <style scoped>
+.search{
+  margin-top: 44px;
+}
 .van-nav-bar {
   background: #f6f6f6;
 }

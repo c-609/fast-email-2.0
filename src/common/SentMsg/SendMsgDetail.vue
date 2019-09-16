@@ -13,13 +13,37 @@
         <van-collapse-item :title="msg.title" name="1">
           发布时间 : {{msg.time}}
           <br />
-          发布身份 : {{msg.sender}}
+          发布身份 : {{msg.identity.roleCNName}}
         </van-collapse-item>
       </van-collapse>
       <van-cell title="接收人员" is-link />
-      <van-cell title="未读人员" is-link :value="msg.ratio" />
+      <van-cell title="未读人员" is-link :value="unReadNum" @click="CheckUnReadList()"/>
     </div>
-
+    <van-popup v-model="show" :style="{ height: '100%', width: '100%' } ">
+      <div class="header">
+        <van-nav-bar title="未读人员" left-arrow @click-left="showList" fixed></van-nav-bar>
+        <div class="content">
+          <van-checkbox-group v-model="result">
+            <van-cell-group>
+              <van-cell
+                v-for="(item, index) in list"
+                clickable
+                :key="item"
+                :title="`复选框 ${item}`"
+                @click="toggle(index)"
+              >
+                <van-checkbox
+                  v-show="show"
+                  :name="item"
+                  ref="checkboxes"
+                  slot="right-icon"
+                />
+              </van-cell>
+            </van-cell-group>
+          </van-checkbox-group>
+        </div>
+      </div>
+    </van-popup>
     <!-- 通知内容 -->
     <div class="content">
       <van-cell title="通知内容："></van-cell>
@@ -30,29 +54,52 @@
 
 <script>
 import eventBus from "./../../util/eventBus";
+import {getUnreadList} from "../../api/message"
 export default {
   name: "SendMsgDetail",
   data() {
     return {
+      list: ['a', 'b', 'c'],
+      result: ['a', 'b'],
+      show:false,
+      unReadList:'',
+      unReadNum:'',
       activeName: ["1"],
       msg: "" //通知对象
     };
   },
   created() {
-    eventBus.$on("sendMsgDetail", res => {
-      console.log(res);
+    eventBus.$on("sendMsgDetail", res => {   
       this.msg = res;
     });
+  },
+  mounted(){
+    getUnreadList(this.msg.id).then(res=>{
+        if(res.data.code == 0){
+          this.unReadList = res.data.data;
+          this.unReadNum = res.data.data.length;
+        }
+    })
   },
   beforeDestroy() {
     eventBus.$off("sendMsgDetail");
   },
   methods: {
+    toggle(index) {
+      this.$refs.checkboxes[index].toggle();
+    },
     //返回
     onClickLeft() {
       this.$router.go(-1);
     },
-
+    showList(){
+      this.show = false;
+    },
+    //查看未读名单
+    CheckUnReadList(){
+      console.log(this.unReadList)
+      this.show = true;
+    },
     //S删除
     onClickRight() {}
   }
@@ -60,6 +107,9 @@ export default {
 </script>
 
 <style scoped>
+.header {
+  border-bottom: 1px solid #d2d2d2;
+}
 .van-nav-bar {
   background: #f6f6f6;
 }
@@ -71,5 +121,19 @@ export default {
 }
 .detail .van-cell:not(:last-child)::after {
   border-bottom: 0px;
+}
+.content {
+  margin-top: 44px;
+}
+.cell {
+  height: 40px;
+  line-height: 40px;
+  width: 100%;
+  background-color: pink;
+  padding-left: 15px;
+}
+.cell span {
+  color: #191f25;
+  font-size: 16px;
 }
 </style>

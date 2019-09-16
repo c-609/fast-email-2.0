@@ -3,27 +3,30 @@
     <div class="header">
       个人中心
       <van-icon
-        name="setting-o"
+        name="volume-o"
         style="float:right;padding:13px 15px 0 0;"
         size="18"
         @click="clickSetting()"
       />
+      <div class="sys_msg_icon" v-show="new_sys_msg">
+
+      </div>
     </div>
     <div class="card">
       <div class="identify">
         <ul>
-          <li>张三</li>
+          <li>{{userInfo.name}}</li>
           <li>
-            <van-icon class-prefix="my-icon" name="tel" color="#3296fa"/>  12857485983
+            <van-icon class-prefix="my-icon" name="tel" color="#3296fa"/>  {{userInfo.phone}}
           </li>
           <li>
-            <van-icon class-prefix="my-icon" name="email" color="#15bc83"/>  386596055@qq.com
+            <van-icon class-prefix="my-icon" name="email" color="#15bc83"/>  {{userInfo.email}}
           </li>
           <li>
-            <van-icon class-prefix="my-icon" name="organization"  color="#f25643" />  教务处
+            <van-icon class-prefix="my-icon" name="organization"  color="#f25643" />  {{userInfo.identityEntities[0].deptName}}
           </li>
           <li>
-            <van-icon class-prefix="my-icon" name="role" size="13" color="#ff943e"/>  教务处处长
+            <van-icon class-prefix="my-icon" name="role" size="13" color="#ff943e"/>  {{userInfo.identityEntities[0].roleCNName}}
           </li>
         </ul>
       </div>
@@ -67,17 +70,28 @@
 </template>
 
 <script>
+import IDBMethods from '../../api/IndexedDbMethods'
+import {getUserInformation} from '../../api/login'
 export default {
+  data(){
+    return{
+      userInfo:'',
+      new_sys_msg:true,
+    }
+  },
+  created(){
+    let dbName = localStorage.getItem('userId');
+    IDBMethods.getUserInfo(dbName,"UserInfo",result =>{
+    this.userInfo = result[0];
+  })
+  },
+
   methods: {
     goPath(url) {
       this.$router.push(url);
     },
     clickSetting() {
-      this.$toast({
-        message: "暂未上线",
-        duration: 1000,
-        position: "bottom"
-      });
+      this.$router.push('/sys_msg')
     }
   }
 };
@@ -98,6 +112,15 @@ export default {
   font-weight: 600;
   padding-left: 20px;
   color: #323233;
+}
+.sys_msg_icon {
+  height: 5px;
+  width: 5px;
+  background-color: red;
+  float: right;
+  margin-right: -20px;
+  margin-top: 10px;
+  border-radius: 50%;
 }
 .card {
   width: 340px;

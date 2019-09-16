@@ -7,56 +7,8 @@
       <van-search placeholder="请输入搜索关键词" v-model="value" />
     </div>
     <div class="members">
-      <div class="member">
-        <span>16计科班张三</span>
-        <van-icon name="cross" class="delete_icon" size="18"></van-icon>
-      </div>
-      <div class="member">
-        <span>16计科班张三</span>
-        <van-icon name="cross" class="delete_icon" size="18"></van-icon>
-      </div>
-      <div class="member">
-        <span>16计科班张三</span>
-        <van-icon name="cross" class="delete_icon" size="18"></van-icon>
-      </div>
-      <div class="member">
-        <span>16计科班张三</span>
-        <van-icon name="cross" class="delete_icon" size="18"></van-icon>
-      </div>
-      <div class="member">
-        <span>16计科班张三</span>
-        <van-icon name="cross" class="delete_icon" size="18"></van-icon>
-      </div>
-      <div class="member">
-        <span>16计科班张三</span>
-        <van-icon name="cross" class="delete_icon" size="18"></van-icon>
-      </div>
-      <div class="member">
-        <span>16计科班张三</span>
-        <van-icon name="cross" class="delete_icon" size="18"></van-icon>
-      </div>
-      <div class="member">
-        <span>16计科班张三</span>
-        <van-icon name="cross" class="delete_icon" size="18"></van-icon>
-      </div>
-      <div class="member">
-        <span>16计科班张三</span>
-        <van-icon name="cross" class="delete_icon" size="18"></van-icon>
-      </div>
-      <div class="member">
-        <span>16计科班张三</span>
-        <van-icon name="cross" class="delete_icon" size="18"></van-icon>
-      </div>
-      <div class="member">
-        <span>16计科班张三</span>
-        <van-icon name="cross" class="delete_icon" size="18"></van-icon>
-      </div>
-      <div class="member">
-        <span>16计科班张三</span>
-        <van-icon name="cross" class="delete_icon" size="18"></van-icon>
-      </div>
-      <div class="member">
-        <span>16计科班张三</span>
+      <div class="member" v-for="(item,index) in memberList" :key="index">
+        <span>{{memberList.name}}</span>
         <van-icon name="cross" class="delete_icon" size="18"></van-icon>
       </div>
     </div>
@@ -67,13 +19,24 @@
 </template>
 
 <script>
+import eventBus from "../../../../util/eventBus"
 export default {
   data(){
     return{
+      memberList:'',
       docmHeight: document.documentElement.clientHeight,  //默认屏幕高度
       showHeight: document.documentElement.clientHeight,   //实时屏幕高度
       hidshow:true,
     }
+  },
+  created() {
+    eventBus.$on("memberList", res => {
+      console.log(res);   
+      this.memberList = res;
+    });
+  },
+   beforeDestroy() {
+    eventBus.$off("memberList");
   },
   mounted() {
     // window.onresize监听页面高度的变化

@@ -1,43 +1,51 @@
 <template>
     <div>
-        <ul>
-            <items v-for="(model, index) in list" :model="model" :key="index"></items>
-        </ul>
+            <button @click="test1()">123</button>
+            <button @click="test2()">456</button>
+            <span>{{testdata}}</span>
     </div>
 </template>
 
 <script>
-import Items from './Items'
+
 export default {
-    components: {
-        Items
-    },
+   
     data(){
         return {
-            list: [
-            {
-                "id": "1",
-                "menuName": "项目管理",
-                "childTree": [{
-                    "menuName": "项目进度",
-                    "childTree": [{
-                        "menuName": "项目一",
-                        "childTree": [{ "menuName": "详细信息" }]
-                    }]
-                }, {
-                    "menuName": "任务安排"
-                }]
-            }, 
-            {
-                "id": "2",
-                "menuName": "数据统计"
-            }, 
-            {
-                "id": "3",
-                "menuName": "人员管理"
-            }]
+            testdata:[],
+           msg:[
+        {
+            "id": 1,
+            "senderId": 2,
+            "senderName": "张三",
+            "title": "测试一",
+            "content": "你好，这是测试一",
+            "time": "2019-09-05 14:37:38",
+            "number": 20,
+            "readNum": 2,
+            "status": 0,
+            "deptRoleId": 1,
+            "identity": {
+                "id": null,
+                "deptRoleId": 1,
+                "deptId": null,
+                "deptName": "dept-update",
+                "roleId": null,
+                "roleName": null,
+                "roleCNName": "update_name"
+            }
         }
-    }
+           ]
+       }
+   },
+   methods:{
+       test1(){
+           this.testdata.unshift(this.msg);
+       },
+       test2(){
+           console.log(this.testdata);
+       }
+   }
 }
 </script>
 

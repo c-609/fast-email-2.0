@@ -86,9 +86,11 @@ export default {
   -ms-user-select:none;
 }
 .child-view {
+
   position: absolute;
   width: 100%;
   transition: all 0.2s;
+  height: 100%;
 }
 .slide-left-enter,
 .slide-right-leave-active {

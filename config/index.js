@@ -12,20 +12,20 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/': {
-        target: 'http://119.29.101.166:8087',
+        target: 'http://119.29.101.166:9000',
         changeOrigin: true,
         pathRewrite: {
           '^/': ''
         }
       },
       '/ws/*': {
-        target: 'http://119.29.101.166:8087',
+        target: 'http://119.29.101.166:9000',
         ws: true
       }
     },
 
     // Various Dev Server settings
-    host: '192.168.1.101', // can be overwritten by process.env.HOST
+    host: 'localhost', // can be overwritten by process.env.HOST
     // host: 'localhost', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,

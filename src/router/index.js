@@ -21,19 +21,15 @@ import ReceiveMsgDetail from "../common/ReceivedMsg/ReceiveMsgDetail.vue";
 import SendMsgDetail from "../common/SentMsg/SendMsgDetail.vue";
 import RecycleList from "@/components/Mine/RecycleBin/RecycleList";
 import Organization from "@/test/Organization";
-import Dexie from "@/test/Dexie"
+import SysMsg from "@/components/Mine/SysMsg/SysMsg"
+import {loginObj, getUserInformation} from '../api/login'
+import { Notify } from 'vant';
+import IDBMethods from '../api/IndexedDbMethods'
+Vue.use(Notify);
 Vue.use(Router);
 
 export default new Router({
   routes: [
-    {
-      path: "/dexie",
-      name: "Dexie",
-      component: Dexie,
-      meta: {
-        showTabbar: false
-      }
-    },
     {
       path: "/login",
       name: "Login",
@@ -45,10 +41,28 @@ export default new Router({
     {
       path: "/",
       redirect: function(to) {
-        if (localStorage.getItem("login")) {
-          return "/home";
-        } else {
-          return "/home";
+        var url='';
+        if(localStorage.getItem("useraccount") && localStorage.getItem("password")){
+          loginObj(localStorage.getItem("useraccount"),localStorage.getItem("password")).then(res => {
+            if(res.data.code == 0){
+              let userId = localStorage.getItem('userId')
+              getUserInformation(userId).then(res => {
+                if(res.data.code == 0){
+                  console.log("---------")
+                  let data = res.data.data;
+                  let dbName = localStorage.getItem('userId');
+                  IDBMethods.putUserInfo(dbName,"UserInfo",data);
+                }
+              })        
+             localStorage.setItem('url',"/home")
+             Notify({ type: 'success', message: '登录成功', duration: 600 });
+            }else{
+              localStorage.setItem('url',"/login")
+            }
+          })
+          return localStorage.getItem("url");
+        }else{
+          return "/login"
         }
       }
     },
@@ -118,7 +132,8 @@ export default new Router({
       name: EditMsg,
       component: EditMsg,
       meta: {
-        showTabbar: false
+        showTabbar: false,
+        index:7,
       }
     },
     {
@@ -206,6 +221,15 @@ export default new Router({
       path: "/recycle_list",
       name: RecycleList,
       component: RecycleList,
+      meta: {
+        showTabbar: false,
+        index:5
+      }
+    },
+    {
+      path: "/sys_msg",
+      name: SysMsg,
+      component: SysMsg,
       meta: {
         showTabbar: false,
         index:5

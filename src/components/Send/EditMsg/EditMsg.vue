@@ -80,4 +80,10 @@ export default {
 .title-sender .van-cell:not(:last-child)::after {
   border-bottom: 0px;
 }
+.van-nav-bar .van-icon {
+  color: #191f25;
+}
+.van-nav-bar__arrow {
+  font-size: 18px;
+}
 </style>
