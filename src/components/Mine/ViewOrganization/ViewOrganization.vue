@@ -11,7 +11,7 @@
 
 <script>
 import OrgCell from "../../../base/OrgCell";
-import { getOrg, getChildOrg } from "../../../api/organization";
+import { getOrg, getChildOrg, getOrgUsers } from "../../../api/organization";
 export default {
   components: {
     OrgCell
@@ -19,22 +19,21 @@ export default {
   data() {
     return {
       index: 0,
-      list: "", //对象，当前界面的数据对象 {parentId，parentStatus，data[]}
+      list: "", //对象，当前界面的数据对象 {parentId，data[]}
       stack: [], //数组，存储路过的数据对象，便于返回,list
       tree: [] // 数组，存放请求到的所有数据对象,将parentId作为数组的下标
     };
   },
   created() {
     var data;
+    var list = new Object();
     getChildOrg(1).then(res => {
       data = res.data.data;
       list.parentId = 1;
-      list.parentStatus = 0;
       list.data = data;
       this.list = list;
       this.stack.push(list);
       this.tree[list.parentId] = list;
-      console.log(this.tree);
     });
   },
 
@@ -43,18 +42,40 @@ export default {
     goNext(item) {
       var temp;
       var id = item.id;
-
       temp = this.findDataInTree(id);
 
       var list;
       if (temp == 1) {
         list = this.tree[id];
+        this.list = list;
+        this.stack.push(list);
+        this.tree[id] = list;
       } else {
-        list = this.getDataById(id);
+        var data;
+        var list = new Object();
+        getChildOrg(id).then(res => {
+          if (res.data.data == null) {
+            getOrgUsers(id).then(res => {
+              data = res.data.data;
+              for (var i = 0; i < data.length; i++) {
+                data[i].hasChild = 0;
+              }
+              list.parentId = id;
+              list.data = data;
+              this.list = list;
+              this.stack.push(list);
+              this.tree[list.parentId] = list;
+            });
+          } else {
+            data = res.data.data;
+            list.parentId = id;
+            list.data = data;
+            this.list = list;
+            this.stack.push(list);
+            this.tree[list.parentId] = list;
+          }
+        });
       }
-      this.list = list;
-      this.stack.push(list);
-      this.tree[id] = list;
     },
     //返回，退出页面或者返回上一级
     goBack() {
@@ -72,13 +93,6 @@ export default {
       } else {
         return 1;
       }
-    },
-
-    //发请求请求数据
-    getDataById(id) {
-      if (id == 0) return this.data1;
-      else if (id == 1) return this.data2;
-      else if (id == 11) return this.data3;
     }
   }
 };

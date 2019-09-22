@@ -1,7 +1,7 @@
 <template>
   <div class="org-cell">
     <van-cell  :title="data.name">
-      <van-icon slot="right-icon" name="arrow" style="line-height: inherit;" @click="click" />
+      <van-icon slot="right-icon" name="arrow" style="line-height: inherit;" @click="click"  v-if="data.hasChild!=0" />
     </van-cell>
   </div>
 </template>
@@ -38,4 +38,5 @@ export default {
 .header {
   border-bottom: 1px solid #d2d2d2;
 }
+
 </style>
