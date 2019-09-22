@@ -10,6 +10,8 @@ import ReceivedMsg from "@/common/ReceivedMsg/ReceivedMsg";
 import SentMsg from "@/common/SentMsg/SentMsg";
 import InviteMsg from "@/components/Home/InviteMsg/InviteMsg";
 import EditMsg from "@/components/Send/EditMsg/EditMsg";
+import ReceiverList from "@/components/Send/EditMsg/ReceiverList";
+import SelectReceiver from "@/components/Send/EditMsg/SelectReceiver";
 import ViewOrganization from "@/components/Mine/ViewOrganization/ViewOrganization";
 import MyGroup from "@/components/Mine/MyGroup/MyGroup";
 import ViewMyGroup from "@/components/Mine/MyGroup/ViewMyGroup/ViewMyGroup";
@@ -115,6 +117,22 @@ export default new Router({
       path: "/sent_msg",
       name: SentMsg,
       component: SentMsg,
+      meta: {
+        showTabbar: false
+      }
+    },
+    {
+      path: "/receiver_list",
+      name: ReceiverList,
+      component: ReceiverList,
+      meta: {
+        showTabbar: false
+      }
+    },
+    {
+      path: "/select_receiver",
+      name: SelectReceiver,
+      component: SelectReceiver,
       meta: {
         showTabbar: false
       }

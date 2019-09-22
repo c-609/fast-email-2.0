@@ -22,7 +22,7 @@
 
     <!-- 收件人 -->
     <div class="receiver">
-      <van-cell title="收件人" is-link :value="persons" />
+      <van-cell title="收件人" is-link :value="persons" to="/receiver_list"/>
     </div>
 
     <!-- 通知内容 -->
@@ -42,7 +42,9 @@ export default {
       msg: "",
       show: false,
       persons: " 请选择", //收件人单元格提示语，如果选了人为 “已选择”
-      originalMsg: "" //原始的转发数据
+      originalMsg: "", //原始的转发数据
+      tree:[],
+      result:[],
     };
   },
   created() {
@@ -50,8 +52,16 @@ export default {
       this.originalMsg = { ...res }; //es6语法，解决v-model数据双向绑定
       this.msg = res;
     });
+    eventBus.$on("selectList",(tree,result)=>{
+      this.tree = tree;
+      this.result = result;
+     this.persons = result.length;
+    })
   },
   beforeDestroy() {
+    
+    eventBus.$off("selectList");
+    eventBus.$emit("selectReceiver",this.tree,this.result);
     eventBus.$off("editMsg");
     if (this.originalMsg != "") {
       eventBus.$emit("receiveMsgDetail", this.originalMsg);
