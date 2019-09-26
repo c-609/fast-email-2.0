@@ -12,7 +12,7 @@
 <script>
 import OrgList from "./OrgList";
 import eventBus from "./../../../util/eventBus";
-import { getChildOrg, getOrgUsers } from "../../../api/organization";
+import { getOrg, getChildOrg, getOrgUsers } from "../../../api/organization";
 export default {
   components: {
     OrgList
@@ -36,15 +36,16 @@ export default {
       currentList: "", //本级最新的数据对象
       stack: [], //数组，存储路过的数据对象，便于返回,list
       tree: [], // 数组，存放请求到的所有数据对象,将parentId作为数组的下标
-      result: []
+      result: [],
+      role: ""
     };
   },
 
   created() {
     //监听select List传来的数据
-    eventBus.$on("selectList", (tree, result) => {
+    eventBus.$on("selectList", (tree, result, role) => {
       this.tree = tree;
-      console.log(this.tree);
+      this.role = role;
       // this.result = result;
 
       //请求第一级，parentId默认为0
@@ -62,16 +63,24 @@ export default {
         this.tree[list.parentId] = list;
       } else {
         // list = this.getDataById(1);
-        var data;
-        getChildOrg(1).then(res => {
-          data = res.data.data;
-          list.parentId = 1;
-          list.parentStatus = 0;
-          list.data = data;
-          this.list = list;
-          this.stack.push(list);
-          this.tree[list.parentId] = list;
-          console.log(this.tree);
+        //获取顶级部门id
+        getOrg(this.role.roleId, this.role.deptId).then(res => {
+          if (res.data.code == 0) {
+            var topDeptId = res.data.data.id; //顶级部门id
+            var _this = this;
+            getChildOrg(topDeptId).then(res => {
+              var data;
+              var list = new Object();
+              data = res.data.data;
+              list.parentId = topDeptId;
+              list.parentStatus = 0;
+              list.data = data;
+              _this.list = list;
+              _this.stack.push(list);
+              _this.tree[list.parentId] = list;
+              console.log(list);
+            });
+          }
         });
       }
     });
@@ -135,7 +144,7 @@ export default {
       } else {
         var data;
 
-        getChildOrg(id).then(res => {
+        getChildOrg(item.id).then(res => {
           //机构下一层是用户，发送请求用户的请求
           var _this = this;
           if (res.data.data == null) {
@@ -257,9 +266,8 @@ export default {
                       obj.userId = this.tree[i].data[j].userId;
                       obj.name = this.tree[i].data[j].name;
                       users.push(obj);
-                    }
-                    else{
-                      deptIds.push(this.tree[i].data[j].id );
+                    } else {
+                      deptIds.push(this.tree[i].data[j].id);
                     }
                   }
                 }
@@ -269,13 +277,13 @@ export default {
         }
 
         //取所选部门下人
-         getOrgUsers(2).then(res => {
-           console.log(res.data)
-         })
+        getOrgUsers(2).then(res => {
+          console.log(res.data);
+        });
 
         this.result = result;
         console.log(deptIds);
-        console.log(users)
+        console.log(users);
         this.$router.go(-1);
       } else {
         var parentId = this.stack[this.stack.length - 1].parentId;

@@ -10,19 +10,22 @@
     <!-- 通知b标题与发件身份 -->
     <div class="title-sender">
       <van-field v-model="msg.title" label="通知标题 ：" placeholder="请输入标题" />
-      <van-field
-        v-model="msg.senderIdentify"
-        label="发件身份 ："
-        placeholder="请选择发件身份"
-        @click="show=true"
-      />
+      <van-field v-model="role.roleCNName" label="发件身份 ：" placeholder="请选择发件身份" @click="show=true" />
       <!-- 发件身份弹框 -->
-      <van-popup v-model="show" @open="openPopup" @close="closePopup"></van-popup>
+      <van-popup v-model="show" @open="openPopup" @close="closePopup">
+        <van-radio-group v-model="role">
+          <van-cell-group>
+            <van-cell v-for="item in roles" :key="item.id" :title="item.roleCNName" clickable @click="radio = '1'">
+              <van-radio slot="right-icon" :name="item" />
+            </van-cell>   
+          </van-cell-group>
+        </van-radio-group>
+      </van-popup>
     </div>
 
     <!-- 收件人 -->
     <div class="receiver">
-      <van-cell title="收件人" is-link :value="persons" to="/receiver_list"/>
+      <van-cell title="收件人" is-link :value="persons" to="/receiver_list" />
     </div>
 
     <!-- 通知内容 -->
@@ -35,6 +38,8 @@
 
 <script>
 import eventBus from "./../../../util/eventBus";
+import IDBMethods from "../../../api/IndexedDbMethods";
+import { getGroup } from "../../../api/organization";
 export default {
   name: "EditMsg",
   data() {
@@ -43,8 +48,10 @@ export default {
       show: false,
       persons: " 请选择", //收件人单元格提示语，如果选了人为 “已选择”
       originalMsg: "", //原始的转发数据
-      tree:[],
-      result:[],
+      tree: [],
+      result: [],
+      role: "", //选择的发件身份
+      roles: [] //用户的所有身份
     };
   },
   created() {
@@ -52,16 +59,15 @@ export default {
       this.originalMsg = { ...res }; //es6语法，解决v-model数据双向绑定
       this.msg = res;
     });
-    eventBus.$on("selectList",(tree,result)=>{
+    eventBus.$on("selectList", (tree, result) => {
       this.tree = tree;
       this.result = result;
-     this.persons = result.length;
-    })
+      this.persons = result.length;
+    });
   },
   beforeDestroy() {
-    
     eventBus.$off("selectList");
-    eventBus.$emit("selectReceiver",this.tree,this.result);
+    eventBus.$emit("selectReceiver", this.tree, this.result,this.role);
     eventBus.$off("editMsg");
     if (this.originalMsg != "") {
       eventBus.$emit("receiveMsgDetail", this.originalMsg);
@@ -78,10 +84,19 @@ export default {
     onClickRight() {},
 
     //打开发件身份弹出层时触发
-    openPopup() {},
+    openPopup() {
+      //从本地获取用户拥有的发件身份roles
+      let dbName = localStorage.getItem("userId");
+      IDBMethods.getUserInfo(dbName, "UserInfo", result => {
+        var userInfo = result[0];
+        this.roles = userInfo.identityEntities;
+      });
+    },
 
     //关闭发件身份弹出层时触发
-    closePopup() {}
+    closePopup() {
+      
+    }
   }
 };
 </script>
@@ -95,5 +110,9 @@ export default {
 }
 .van-nav-bar__arrow {
   font-size: 18px;
+}
+.van-popup {
+  width: 340px;
+  min-height: 100px;
 }
 </style>
