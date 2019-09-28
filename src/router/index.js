@@ -19,6 +19,7 @@ import ViewAllMember from "@/components/Mine/MyGroup/ViewMyGroup/ViewAllMember";
 import JoinedGroup from "@/components/Mine/JoinedGroup/JoinedGroup";
 import ViewJoinedGroup from "@/components/Mine/JoinedGroup/ViewJoinedGroup";
 import CreateGroup from "@/components/Mine/MyGroup/CreateGroup/CreateGroup";
+import ChooseMember from "@/components/Mine/MyGroup/CreateGroup/ChooseMember";
 import ReceiveMsgDetail from "../common/ReceivedMsg/ReceiveMsgDetail.vue";
 import SendMsgDetail from "../common/SentMsg/SendMsgDetail.vue";
 import RecycleList from "@/components/Mine/RecycleBin/RecycleList";
@@ -211,6 +212,15 @@ export default new Router({
       path: "/create_group",
       name: CreateGroup,
       component: CreateGroup,
+      meta: {
+        showTabbar: false,
+        index:6
+      }
+    },
+    {
+      path: "/choose_member",
+      name: ChooseMember,
+      component: ChooseMember,
       meta: {
         showTabbar: false,
         index:6

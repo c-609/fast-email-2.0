@@ -2,7 +2,7 @@
   <div class="myGroup">
     <div class="header">
       <van-nav-bar title="我的群组" left-arrow @click-left="onClickLeft" fixed>
-        <van-icon name="plus" slot="right" color="#191f25" size="18" @click="createGroup()" />
+        <van-icon name="plus" slot="right" color="#191f25" size="18" @click="addGroup()" />
       </van-nav-bar>
     </div>
     <div class="search">
@@ -52,7 +52,7 @@ export default {
         eventBus.$emit("groupMsg", res.data.data);
       })
     },
-    createGroup() {
+    addGroup() {
       this.$router.push("/create_group");
     }
   }

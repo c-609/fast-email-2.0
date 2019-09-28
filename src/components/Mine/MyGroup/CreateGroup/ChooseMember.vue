@@ -1,8 +1,11 @@
 <template>
-  <div class="viewOrganization">
+  <div>
     <div class="header">
-      <van-nav-bar title="我的机构" left-arrow @click-left="goBack" fixed></van-nav-bar>
+      <van-nav-bar title="创建群组" left-arrow @click-left="goBack" fixed>
+        <van-button slot="right" size="small" type="info" @click="confirm">确认</van-button>
+      </van-nav-bar>
     </div>
+
     <div class="content">
       <org-list :data="list" :key="list.parentId" @goNext="goNext" @updateData="updateData"></org-list>
     </div>
@@ -10,34 +13,21 @@
 </template>
 
 <script>
-import OrgList from "./OrgList";
-import eventBus from "./../../../util/eventBus";
-import { getOrg, getChildOrg, getOrgUsers } from "../../../api/organization";
+import OrgList from "../../../Send/EditMsg/OrgList";
+import eventBus from "../../../../util/eventBus";
+import { getOrg, getChildOrg, getOrgUsers } from "../../../../api/organization";
 export default {
   components: {
     OrgList
   },
   data() {
     return {
-      index: 0,
-
-      //数据存储结构如下hasChild是否有子节点，0无，有的话没有haschild属性，最后用户层数据用户得属性
-      // data1: {
-      //   parentId: 0,
-      //   parentStatus: -1,
-      //   data: [
-      //     { id: 1, name: "信息", status: -1 ,hasChild: 0},
-      //     { id: 2, name: "物电", status: -1 ,hasChild: 0},
-      //     { id: 3, name: "化工", status: -1,hasChild: 0 }
-      //   ]
-      // },
-
       list: "", //对象，当前界面的数据对象 {parentId，parentStatus，data[]}
       currentList: "", //本级最新的数据对象
       stack: [], //数组，存储路过的数据对象，便于返回,list
       tree: this.$store.state.tree, // 数组，存放请求到的所有数据对象,将parentId作为数组的下标
       result: [],
-      role: this.$store.state.role
+      currentList: ""
     };
   },
   watch: {
@@ -46,35 +36,39 @@ export default {
     }
   },
   created() {
-    getOrg(this.role.roleId, this.role.deptId).then(res => {
-      var list = new Object();
-      var temp;
-      temp = this.findDataInTree(res.data.data.parentId);
-      if (temp == 1) {
-        list = this.tree[res.data.data.parentId];
-        this.list = list;
-        this.stack.push(list);
-        this.tree[list.parentId] = list;
-      } else {
-        var data = new Array();
-        data.push(res.data.data);
-        list.parentId = res.data.data.parentId;
-        list.parentStatus = 0;
+    var temp;
+    temp = this.findDataInTree(1);
+    var list = new Object();
+    if (temp == 1) {
+      list = this.tree[1];
+      this.list = list;
+      this.stack.push(list);
+      this.tree[list.parentId] = list;
+    } else {
+      var data = new Array();
+
+      getChildOrg(1).then(res => {
+        // data.push(res.data.data);
+
+        data = res.data.data;
+        console.log(data);
+        list.parentId = 1;
         list.data = data;
         this.list = list;
+        console.log(list);
         this.stack.push(list);
-        this.tree[this.list.parentId] = this.list;
-      }
-    });
+        this.tree[list.parentId] = list;
+      });
+    }
   },
   beforeDestroy() {
-    this.$store.commit("setDeptUsers", this.result);
-  //   console.log(this.result);
-  //   //将发送请求得到的所有数据以及选择的所有用户传给ReceicverList页面
-  //   // eventBus.$emit("selectReceiver", this.result);
-  //   // eventBus.$off("selectList");
+    eventBus.$emit("chooseMumber", this.result);
+    this.$store.commit("setResult", this.result);
   },
   methods: {
+    confirm() {
+      this.exitChooseMenber();
+    },
     //通过id判断要请求的数据tree中是否存在，返回 0不存在，1存在
     findDataInTree(id) {
       if (this.tree[id] == null || this.tree[id] == undefined) {
@@ -221,76 +215,7 @@ export default {
 
       //退出页面,处理选择的接收者
       if (this.stack.length == 0) {
-        var result = new Array(); //最后发送精确到用户，userId,name
-        var deptIds = new Array(); //所选部门id
-        var users = new Array(); //所选用户
-
-        //筛选出用户和部门
-        for (var i = 0; i < this.tree.length; i++) {
-          if (this.tree[i] != undefined) {
-            if (this.tree[i].parentStatus != 0) {
-              if (this.tree[i].data != undefined) {
-                for (var j = 0; j < this.tree[i].data.length; j++) {
-                  if (this.tree[i].data[j].status == 1) {
-                    var obj = new Object();
-                    //用户id
-                    if (this.tree[i].data[j].userId != undefined) {
-                      obj.userId = this.tree[i].data[j].userId;
-                      obj.name = this.tree[i].data[j].name;
-                      users.push(obj);
-                    } else {
-                      deptIds.push(this.tree[i].data[j].id);
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-
-        //有机构被选
-        if (deptIds.length > 0) {
-          var depts = deptIds.join(",");
-          getOrgUsers(depts).then(res => {
-            var data = res.data.data;
-            for (var j = 0; j < data.length; j++) {
-              var obj = new Object();
-              obj.userId = data[j].userId;
-              obj.name = data[j].name;
-              result.push(obj);
-              // result[data[j].userId] = data[j].name;
-            }
-
-            //有用户被选
-            if (users.length > 0) {
-              for (var i = 0; i < users.length; i++) {
-                var obj = new Object();
-                obj.userId = users[i].userId;
-                obj.name = users[i].name;
-                result.push(obj);
-              }
-            }
-
-            this.result = result;
-            this.$store.commit("setDeptUsers", this.result);
-            console.log(this.result);
-            this.$router.go(-1);
-          });
-        } else {
-          if (users.length > 0) {
-            for (var i = 0; i < users.length; i++) {
-              var obj = new Object();
-                obj.userId = users[i].userId;
-                obj.name = users[i].name;
-                result.push(obj);
-            }
-          }
-
-          this.result = result;
-          this.$store.commit("setDeptUsers", this.result);
-          console.log(this.result);
-          this.$router.go(-1);
-        }
+        this.exitChooseMenber();
       } else {
         var parentId = this.stack[this.stack.length - 1].parentId;
         var data = this.tree[parentId].data;
@@ -303,9 +228,87 @@ export default {
             break;
           }
         }
+
         this.list = "";
         this.list = this.stack[this.stack.length - 1];
         this.currentList = "";
+      }
+    },
+
+    exitChooseMenber() {
+      var result = new Array(); //最后发送精确到用户，userId,name
+      var deptIds = new Array(); //所选部门id
+      var users = new Array(); //所选用户
+
+      //筛选出用户和部门
+      for (var i = 0; i < this.tree.length; i++) {
+        if (this.tree[i] != undefined) {
+          if (this.tree[i].parentStatus != 0) {
+            if (this.tree[i].data != undefined) {
+              for (var j = 0; j < this.tree[i].data.length; j++) {
+                if (this.tree[i].data[j].status == 1) {
+                  var obj = new Object();
+                  //用户id
+                  if (this.tree[i].data[j].userId != undefined) {
+                    obj.userId = this.tree[i].data[j].userId;
+                    obj.name = this.tree[i].data[j].name;
+                    users.push(obj);
+                  } else {
+                    deptIds.push(this.tree[i].data[j].id);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      //有机构被选
+      if (deptIds.length > 0) {
+        var depts = deptIds.join(",");
+        getOrgUsers(depts).then(res => {
+          var data = res.data.data;
+          for (var j = 0; j < data.length; j++) {
+            result[data[j].userId] = data[j].name;
+          }
+
+          //有用户被选
+          if (users.length > 0) {
+            for (var i = 0; i < users.length; i++) {
+              result[users[i].userId] = users[i].name;
+            }
+          }
+
+          if (result != null) {
+            for (var i = 0; i < result.length; i++) {
+              if (result[i] != null) {
+                var obj = new Object();
+                obj.userId = i;
+                obj.name = result[i];
+                this.result.push(obj);
+              }
+            }
+          }
+          this.$router.push("create_group");
+        });
+      } else {
+        if (users.length > 0) {
+          for (var i = 0; i < users.length; i++) {
+            result[users[i].userId] = users[i].name;
+          }
+        }
+
+        if (result != null) {
+          for (var i = 0; i < result.length; i++) {
+            if (result[i] != null) {
+               var obj = new Object();
+                obj.userId = i;
+                obj.name = result[i];
+                this.result.push(obj);
+            }
+          }
+        }
+        this.$router.push("create_group");
       }
     }
   }
@@ -313,18 +316,6 @@ export default {
 </script>
 
 <style scoped>
-.van-nav-bar .van-icon {
-  color: #191f25;
-}
-.van-nav-bar__arrow {
-  font-size: 18px;
-}
-.van-nav-bar {
-  background-color: #f6f6f6;
-}
-.header {
-  border-bottom: 1px solid #d2d2d2;
-}
 .content {
   margin-top: 46px;
 }

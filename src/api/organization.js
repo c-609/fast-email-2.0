@@ -26,7 +26,7 @@ export function getChildOrg(id) {
   })
 }
 
-//请求用户列表，通过部门信息
+//通过机构id数组,获取所有用户，
 export function getOrgUsers(deptIds) {
   return request({
     // url: "/manage/user/dept",
@@ -50,10 +50,13 @@ export function getGroup(userId) {
   })
 }
 
-//查看某个群组
-export function getGroupUsers(groupId) {
+//通过群组id数组，获取所有用户
+export function getGroupUsers(groupIds) {
   return request({
-      url: " /manage/group/" + groupId,
+      url: "/manage/user/group_under/",
+      params: {
+        groupIds
+      },
       methods: 'get'
     }
   )

@@ -44,31 +44,105 @@ export default {
     return {
       orgValue: "进入机构选择",
       groupValue: "进入群组选择",
-      result: this.$store.state.result,
+      result: "", //[userid] = name
       show: false,
       groups: this.$store.state.groups,
       selectedGroups: this.$store.state.selectedGroups,
       selectedGroupsTemp: 0,
-      role: this.$store.state.role
+      role: this.$store.state.role,
+      groupUsers: this.$store.state.groupUsers,
+      deptUsers: this.$store.state.deptUsers
     };
   },
   watch: {
     selectedGroups() {
       this.selectedGroupsTemp = 1;
+    },
+    groupUsers() {
+      console.log(this.groupUsers);
+      console.log(this.$store.state.deptUsers);
+      this.result = [];
+      // this.result = this.deptUsers;
+      console.log(this.deptUsers);
+      if (this.deptUsers.length != 0) {
+        for (var i = 0; i < this.deptUsers.length; i++) {
+          var _this = this;
+          this.$set(
+            _this.result,
+            _this.deptUsers[i].userId,
+            _this.deptUsers[i].name
+          );
+        }
+      }
+      console.log(this.deptUsers);
+      if (this.groupUsers.length != 0) {
+        for (var i = 0; i < this.groupUsers.length; i++) {
+          var _this = this;
+          this.$set(
+            _this.result,
+            _this.groupUsers[i].userId,
+            _this.groupUsers[i].name
+          );
+        }
+      }
     }
   },
   created() {
-    //监听select Receiver传过来的选择的所有用户
-    eventBus.$on("selectReceiver", result => {
-      if (result != null) this.result = result;
-      console.log(this.result);
-    });
+    // console.log(this.result);
+    // console.log(this.groupUsers);
+    // console.log(this.deptUsers);
+    // if (this.groupUsers.length !=0) {
+    //   for (var i = 0; i < this.groupUsers.length; i++) {
+    //     this.result[this.groupUsers[i].userId] = this.groupUsers[i].name;
+    //   }
+    // }
+    // if (this.deptUsers.length != 0) {
+    //   for (var i = 0; i < this.deptUsers.length; i++) {
+    //     this.result[this.deptUsers[i].userId] = this.deptUsers[i].name;
+    //   }
+    // }
+    console.log(this.groupUsers);
+    console.log(this.$store.state.deptUsers);
+    this.result = [];
+    // this.result = this.deptUsers;
+    console.log(this.deptUsers);
+    if (this.deptUsers.length != 0) {
+      for (var i = 0; i < this.deptUsers.length; i++) {
+        var _this = this;
+        this.$set(
+          _this.result,
+          _this.deptUsers[i].userId,
+          _this.deptUsers[i].name
+        );
+      }
+    }
+    console.log(this.deptUsers);
+    if (this.groupUsers.length != 0) {
+      for (var i = 0; i < this.groupUsers.length; i++) {
+        var _this = this;
+        this.$set(
+          _this.result,
+          _this.groupUsers[i].userId,
+          _this.groupUsers[i].name
+        );
+      }
+    }
   },
   beforeDestroy() {
-    eventBus.$off("selectReceiver");
+    //将已选人员id数组传给editMsg
+      var userIds = [];
+      for (var i = 0; i < this.result.length; i++) {
+        if (this.result[i]) userIds.push(i);
+      }
+      
+    eventBus.$emit("userIds", userIds);console.log(userIds)
+    this.$store.commit("setResult", this.result);
+    this.$store.commit("setGroupUsers", this.groupUsers);
   },
   methods: {
     onClickLeft() {
+      
+      
       this.$router.go(-1);
     },
     onClickRight() {},
@@ -86,7 +160,6 @@ export default {
       //获取所有群组
       this.selectedGroupsTemp = 0;
       if (this.groups.length == 0) {
-        alert("请求所有群组");
         let dbName = localStorage.getItem("userId");
         IDBMethods.getUserInfo(dbName, "UserInfo", result => {
           var userInfo = result[0];
@@ -102,12 +175,34 @@ export default {
     //关闭群组
     closePopup() {
       if (this.selectedGroupsTemp == 1) {
-        getGroupUsers().then(res => {
-          console.log(res);
-          this.result = res.data.data.userInfoEntityList;
-          console.log(this.result);
-        });
+        var ids = new Array();
+
+        for (var i = 0; i < this.selectedGroups.length; i++) {
+          ids.push(this.selectedGroups[i].id);
+        }
         this.$store.commit("setSelectedGroups", this.selectedGroups);
+
+        var deptIds = ids.join(",");
+        console.log(deptIds);
+        getGroupUsers(deptIds).then(res => {
+          var data = res.data.data;
+          console.log(data);
+          var groupUsers = [];
+          if (data != null) {
+            for (var i = 0; i < data.length; i++) {
+              var obj = new Object();
+              obj.userId = data[i].userId;
+              obj.name = data[i].name;
+              groupUsers.push(obj);
+              // this.$set(this.groupUsers,data[i].userId,data[i].name);
+            }
+          }
+          this.groupUsers = groupUsers;
+          console.log(this.groupUsers);
+          this.$store.commit("setGroupUsers", this.groupUsers);
+        });
+      } else {
+        console.log(this.groupUsers);
       }
     }
   }
