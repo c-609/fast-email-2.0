@@ -44,43 +44,28 @@ export default {
     return {
       orgValue: "进入机构选择",
       groupValue: "进入群组选择",
-      tree: [],
-      result: [],
+      result: this.$store.state.result,
       show: false,
-      groups: [],
-      selectedGroups: [],
+      groups: this.$store.state.groups,
+      selectedGroups: this.$store.state.selectedGroups,
       selectedGroupsTemp: 0,
-      role: "",
-      roles: []
+      role: this.$store.state.role
     };
   },
   watch: {
     selectedGroups() {
-      selectedGroupsTemp = 1;
+      this.selectedGroupsTemp = 1;
     }
   },
   created() {
-    //监听select Receiver传过来的请求得到的所有数据以及选择的所有用户
-    eventBus.$on("selectReceiver", (tree, result, role, roles) => {
-      this.tree = tree;
+    //监听select Receiver传过来的选择的所有用户
+    eventBus.$on("selectReceiver", result => {
       if (result != null) this.result = result;
-      this.role = role;
-      this.roles = roles;
-      console.log(this.result);
-    });
-    eventBus.$on("edit", (tree, result, role, roles) => {
-      this.tree = tree;
-      this.result = result;
-      this.role = role;
-      this.roles = roles;
       console.log(this.result);
     });
   },
   beforeDestroy() {
-    //如果是第二次进入机构选人，将原先的数据传给selectReceiver
-    eventBus.$emit("selectList", this.tree, this.result, this.role, this.roles);
     eventBus.$off("selectReceiver");
-    eventBus.$off("edit");
   },
   methods: {
     onClickLeft() {
@@ -99,14 +84,16 @@ export default {
     openPopup() {
       //从本地获取用户拥有的发件身份roles
       //获取所有群组
-      selectedGroupsTemp = 0;
+      this.selectedGroupsTemp = 0;
       if (this.groups.length == 0) {
+        alert("请求所有群组");
         let dbName = localStorage.getItem("userId");
         IDBMethods.getUserInfo(dbName, "UserInfo", result => {
           var userInfo = result[0];
           var userId = userInfo.userId;
           getGroup(userId).then(res => {
             this.groups = res.data.data;
+            this.$store.commit("setGroups", this.groups);
           });
         });
       }
@@ -114,13 +101,13 @@ export default {
 
     //关闭群组
     closePopup() {
-      if (selectedGroupsTemp == 1) {
-        
+      if (this.selectedGroupsTemp == 1) {
         getGroupUsers().then(res => {
           console.log(res);
           this.result = res.data.data.userInfoEntityList;
           console.log(this.result);
         });
+        this.$store.commit("setSelectedGroups", this.selectedGroups);
       }
     }
   }

@@ -35,58 +35,42 @@ export default {
       list: "", //对象，当前界面的数据对象 {parentId，parentStatus，data[]}
       currentList: "", //本级最新的数据对象
       stack: [], //数组，存储路过的数据对象，便于返回,list
-      tree: [], // 数组，存放请求到的所有数据对象,将parentId作为数组的下标
+      tree: this.$store.state.tree, // 数组，存放请求到的所有数据对象,将parentId作为数组的下标
       result: [],
-      role: "",
-      roles: ""
+      role: this.$store.state.role
     };
   },
-
+  watch: {
+    tree() {
+      this.$store.commit("setTree", this.tree);
+    }
+  },
   created() {
-    //监听select List传来的数据
-    eventBus.$on("selectList", (tree, result, role, roles) => {
-      if (tree != null) this.tree = tree;
-      this.role = role;
-      this.roles = roles;
-      // this.result = result;
-      // 请求第一级，parentId默认为0
-      // 请求数据前要先查找数据是否在tree中有，没有则发送请求
-
-      var temp;
-      temp = this.findDataInTree(1);
-
+    getOrg(this.role.roleId, this.role.deptId).then(res => {
       var list = new Object();
+      var temp;
+      temp = this.findDataInTree(res.data.data.parentId);
       if (temp == 1) {
-        list = this.tree[1];
-        // this.list = "";
+        list = this.tree[res.data.data.parentId];
         this.list = list;
         this.stack.push(list);
         this.tree[list.parentId] = list;
       } else {
-        getOrg(this.role.roleId, this.role.deptId).then(res => {
-          var data = new Array();
-          var list = new Object();
-          data.push(res.data.data);
-          list.parentId = res.data.data.parentId;
-          list.parentStatus = 0;
-          list.data = data;
-          this.list = list;
-          this.stack.push(list);
-          this.tree[this.list.parentId] = this.list;
-        });
+        var data = new Array();
+        data.push(res.data.data);
+        list.parentId = res.data.data.parentId;
+        list.parentStatus = 0;
+        list.data = data;
+        this.list = list;
+        this.stack.push(list);
+        this.tree[this.list.parentId] = this.list;
       }
     });
   },
   beforeDestroy() {
     //将发送请求得到的所有数据以及选择的所有用户传给ReceicverList页面
-    eventBus.$emit(
-      "selectReceiver",
-      this.tree,
-      this.result,
-      this.role,
-      this.roles
-    );
-    eventBus.$off("selectList");
+    eventBus.$emit("selectReceiver", this.result);
+    // eventBus.$off("selectList");
   },
   methods: {
     //通过id判断要请求的数据tree中是否存在，返回 0不存在，1存在
@@ -190,9 +174,6 @@ export default {
           }
         });
       }
-
-      //最后一级不进行进入下一级
-      //..................
     },
 
     //状态改变，返回当前数据对象
@@ -203,7 +184,6 @@ export default {
     //返回，退出页面或者返回上一级
     goBack() {
       //放回上一级
-
       var checked = 0; //本级被选择的数目
       var currentList;
 
@@ -235,7 +215,6 @@ export default {
       }
 
       this.tree[currentList.parentId] = currentList;
-
       this.stack.pop();
 
       //退出页面,处理选择的接收者

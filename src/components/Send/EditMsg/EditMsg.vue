@@ -15,12 +15,7 @@
       <van-popup v-model="show" @open="openPopup" @close="closePopup">
         <van-radio-group v-model="role">
           <van-cell-group>
-            <van-cell
-              v-for="item in roles"
-              :key="item.id"
-              :title="item.roleCNName"
-              clickable
-            >
+            <van-cell v-for="item in roles" :key="item.id" :title="item.roleCNName" clickable>
               <van-radio slot="right-icon" :name="item" />
             </van-cell>
           </van-cell-group>
@@ -53,11 +48,9 @@ export default {
       show: false,
       persons: " 请选择", //收件人单元格提示语，如果选了人为 “已选择”
       originalMsg: "", //原始的转发数据
-      tree: [],
-      result: [],
-      role: "", //选择的发件身份
-      roles: [], //用户的所有身份
-      oldRole: ""
+      role: this.$store.state.role, //选择的发件身份
+      roles: this.$store.state.roles, //用户的所有身份
+      oldRole: this.$store.state.role
     };
   },
   created() {
@@ -65,18 +58,8 @@ export default {
       this.originalMsg = { ...res }; //es6语法，解决v-model数据双向绑定
       this.msg = res;
     });
-    eventBus.$on("selectList", (tree, result, role,roles) => {
-      this.tree = tree;
-      this.result = result;
-      this.role = role;
-      this.roles = roles;
-      this.oldRole = role;
-      this.persons = result.length;
-    });  
   },
   beforeDestroy() {
-    eventBus.$off("selectList");
-    eventBus.$emit("edit", this.tree, this.result, this.role,this.roles);
     eventBus.$off("editMsg");
     if (this.originalMsg != "") {
       eventBus.$emit("receiveMsgDetail", this.originalMsg);
@@ -84,8 +67,25 @@ export default {
     }
   },
   methods: {
+    clear() {
+      
+      var result = []; //已选择人员
+      var tree = []; //机构发请求得到的数据
+      var groups = []; // 群组向本地取到的用户群组
+      var selectedGroups = []; //已选择群组
+
+      this.$store.commit("setResult", result);
+      this.$store.commit("setTree", tree);
+      this.$store.commit("setGroups", groups);
+      this.$store.commit("setSelectedGroups", selectedGroups);
+    },
     //返回
     onClickLeft() {
+      var roles = []; //请求到的发件身份
+      var role = ""; //选择的发件身份
+      this.$store.commit("setRole", role);
+      this.$store.commit("setRoles", roles);
+      this.clear();
       this.$router.go(-1);
     },
 
@@ -95,21 +95,23 @@ export default {
     //打开发件身份弹出层时触发
     openPopup() {
       //从本地获取用户拥有的发件身份roles
-      console.log(this.roles)
-      if(this.roles.length==0 || this.roles.length == undefined){
-      let dbName = localStorage.getItem("userId");
-      IDBMethods.getUserInfo(dbName, "UserInfo", result => {
-        var userInfo = result[0];
-        this.roles = userInfo.identityEntities;
-      });}
+      if (this.roles == undefined || this.roles.length == 0) {
+        let dbName = localStorage.getItem("userId");
+        IDBMethods.getUserInfo(dbName, "UserInfo", result => {
+          var userInfo = result[0];
+          this.roles = userInfo.identityEntities;
+        });
+      }
     },
 
     //关闭发件身份弹出层时触发
     closePopup() {
       if (this.role.id != this.oldRole.id) {
+        this.$store.commit("setRole", this.role);
+        this.oldRole = this.role;
         this.result = null;
         this.tree = null;
-        this.persons=0;
+        this.persons = 0;
       }
     },
 
@@ -117,6 +119,10 @@ export default {
       if (this.role == "") {
         Toast("请先选择发件身份！");
       } else {
+        this.clear();
+
+        this.$store.commit("setRole", this.role);
+        this.$store.commit("setRoles", this.roles);
         this.$router.push("/receiver_list");
       }
     }
