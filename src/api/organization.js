@@ -20,18 +20,20 @@ export function getOrg(roleId, deptId) {
 export function getChildOrg(id) {
   return request({
     url: '/manage/dept/child/'+id,
-    // url: '/manage/user/dept_under/' + deptId,
+     
     methods: 'get',
 
   })
 }
 
 //请求用户列表，通过部门信息
-export function getOrgUsers(deptId) {
+export function getOrgUsers(deptIds) {
   return request({
-    url: "/manage/user/dept",
+    // url: "/manage/user/dept",
+    // url:'/manage/user/dept_under',
+    url: '/manage/user/dept_under/',
     params: {
-      deptId
+      deptIds
     },
     methods: 'get'
   })

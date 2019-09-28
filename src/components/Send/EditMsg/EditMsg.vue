@@ -15,9 +15,14 @@
       <van-popup v-model="show" @open="openPopup" @close="closePopup">
         <van-radio-group v-model="role">
           <van-cell-group>
-            <van-cell v-for="item in roles" :key="item.id" :title="item.roleCNName" clickable @click="radio = '1'">
+            <van-cell
+              v-for="item in roles"
+              :key="item.id"
+              :title="item.roleCNName"
+              clickable
+            >
               <van-radio slot="right-icon" :name="item" />
-            </van-cell>   
+            </van-cell>
           </van-cell-group>
         </van-radio-group>
       </van-popup>
@@ -25,7 +30,7 @@
 
     <!-- 收件人 -->
     <div class="receiver">
-      <van-cell title="收件人" is-link :value="persons" to="/receiver_list" />
+      <van-cell title="收件人" is-link :value="persons" @click="goSelectList" />
     </div>
 
     <!-- 通知内容 -->
@@ -51,7 +56,8 @@ export default {
       tree: [],
       result: [],
       role: "", //选择的发件身份
-      roles: [] //用户的所有身份
+      roles: [], //用户的所有身份
+      oldRole: ""
     };
   },
   created() {
@@ -59,15 +65,18 @@ export default {
       this.originalMsg = { ...res }; //es6语法，解决v-model数据双向绑定
       this.msg = res;
     });
-    eventBus.$on("selectList", (tree, result) => {
+    eventBus.$on("selectList", (tree, result, role,roles) => {
       this.tree = tree;
       this.result = result;
+      this.role = role;
+      this.roles = roles;
+      this.oldRole = role;
       this.persons = result.length;
-    });
+    });  
   },
   beforeDestroy() {
     eventBus.$off("selectList");
-    eventBus.$emit("selectReceiver", this.tree, this.result,this.role);
+    eventBus.$emit("edit", this.tree, this.result, this.role,this.roles);
     eventBus.$off("editMsg");
     if (this.originalMsg != "") {
       eventBus.$emit("receiveMsgDetail", this.originalMsg);
@@ -86,16 +95,30 @@ export default {
     //打开发件身份弹出层时触发
     openPopup() {
       //从本地获取用户拥有的发件身份roles
+      console.log(this.roles)
+      if(this.roles.length==0 || this.roles.length == undefined){
       let dbName = localStorage.getItem("userId");
       IDBMethods.getUserInfo(dbName, "UserInfo", result => {
         var userInfo = result[0];
         this.roles = userInfo.identityEntities;
-      });
+      });}
     },
 
     //关闭发件身份弹出层时触发
     closePopup() {
-      
+      if (this.role.id != this.oldRole.id) {
+        this.result = null;
+        this.tree = null;
+        this.persons=0;
+      }
+    },
+
+    goSelectList() {
+      if (this.role == "") {
+        Toast("请先选择发件身份！");
+      } else {
+        this.$router.push("/receiver_list");
+      }
     }
   }
 };

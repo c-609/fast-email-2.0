@@ -37,19 +37,20 @@ export default {
       stack: [], //数组，存储路过的数据对象，便于返回,list
       tree: [], // 数组，存放请求到的所有数据对象,将parentId作为数组的下标
       result: [],
-      role: ""
+      role: "",
+      roles: ""
     };
   },
 
   created() {
     //监听select List传来的数据
-    eventBus.$on("selectList", (tree, result, role) => {
-      this.tree = tree;
+    eventBus.$on("selectList", (tree, result, role, roles) => {
+      if (tree != null) this.tree = tree;
       this.role = role;
+      this.roles = roles;
       // this.result = result;
-
-      //请求第一级，parentId默认为0
-      //请求数据前要先查找数据是否在tree中有，没有则发送请求
+      // 请求第一级，parentId默认为0
+      // 请求数据前要先查找数据是否在tree中有，没有则发送请求
 
       var temp;
       temp = this.findDataInTree(1);
@@ -62,56 +63,39 @@ export default {
         this.stack.push(list);
         this.tree[list.parentId] = list;
       } else {
-        // list = this.getDataById(1);
-        //获取顶级部门id
         getOrg(this.role.roleId, this.role.deptId).then(res => {
-          if (res.data.code == 0) {
-            var topDeptId = res.data.data.id; //顶级部门id
-            var _this = this;
-            getChildOrg(topDeptId).then(res => {
-              var data;
-              var list = new Object();
-              data = res.data.data;
-              list.parentId = topDeptId;
-              list.parentStatus = 0;
-              list.data = data;
-              _this.list = list;
-              _this.stack.push(list);
-              _this.tree[list.parentId] = list;
-              console.log(list);
-            });
-          }
+          var data = new Array();
+          var list = new Object();
+          data.push(res.data.data);
+          list.parentId = res.data.data.parentId;
+          list.parentStatus = 0;
+          list.data = data;
+          this.list = list;
+          this.stack.push(list);
+          this.tree[this.list.parentId] = this.list;
         });
       }
     });
   },
   beforeDestroy() {
     //将发送请求得到的所有数据以及选择的所有用户传给ReceicverList页面
-    eventBus.$emit("selectReceiver", this.tree, this.result);
+    eventBus.$emit(
+      "selectReceiver",
+      this.tree,
+      this.result,
+      this.role,
+      this.roles
+    );
     eventBus.$off("selectList");
   },
   methods: {
     //通过id判断要请求的数据tree中是否存在，返回 0不存在，1存在
     findDataInTree(id) {
-      if (this.tree[id] == undefined) {
+      if (this.tree[id] == null || this.tree[id] == undefined) {
         return 0;
       } else {
         return 1;
       }
-    },
-
-    //发请求请求数据
-    getDataById(id) {
-      var data;
-      var list = new Object();
-      getChildOrg(id).then(res => {
-        data = res.data.data;
-        list.parentId = id;
-        list.parentStatus = 0;
-        list.data = data;
-        console.log(list);
-        return list;
-      });
     },
 
     //进入下一级，item为当前点击数据
@@ -123,7 +107,6 @@ export default {
       var status = item.status;
 
       temp = this.findDataInTree(id);
-
       var list = new Object();
       if (temp == 1) {
         list = this.tree[id];
@@ -133,6 +116,14 @@ export default {
           list.parentStatus = 1;
           for (var i = 0; i < list.data.length; i++) {
             list.data[i].status = 1;
+          }
+        }
+        //父节点不选，则接下来一级数据状态为全不选择
+        // console.log(list)
+        if (status == 0) {
+          list.parentStatus = 0;
+          for (var i = 0; i < list.data.length; i++) {
+            list.data[i].status = 0;
           }
         }
         // console.log(list);
@@ -150,7 +141,6 @@ export default {
           if (res.data.data == null) {
             getOrgUsers(id).then(res => {
               if (res.data.data != null) {
-                console.log(res.data.data);
                 data = res.data.data;
                 list.parentId = id;
                 list.parentStatus = 0;
@@ -174,7 +164,7 @@ export default {
                 _this.index++;
                 _this.tree[list.parentId] = list;
               } else {
-                console.log(res.data.data);
+                Toast("该机构下没有内容");
               }
             });
           }
@@ -247,6 +237,7 @@ export default {
       this.tree[currentList.parentId] = currentList;
 
       this.stack.pop();
+
       //退出页面,处理选择的接收者
       if (this.stack.length == 0) {
         var result = new Array(); //最后发送精确到用户，userId,name
@@ -276,15 +267,37 @@ export default {
           }
         }
 
-        //取所选部门下人
-        getOrgUsers(2).then(res => {
-          console.log(res.data);
-        });
+        //有机构被选
+        if (deptIds.length > 0) {
+          var depts = deptIds.join(",");
+          getOrgUsers(depts).then(res => {
+            var data = res.data.data;
+            for (var j = 0; j < data.length; j++) {
+              result[data[j].userId] = data[j].name;
+            }
 
-        this.result = result;
-        console.log(deptIds);
-        console.log(users);
-        this.$router.go(-1);
+            //有用户被选
+            if (users.length > 0) {
+              for (var i = 0; i < users.length; i++) {
+                result[users[i].userId] = users[i].name;
+              }
+            }
+
+            this.result = result;
+            console.log(this.result);
+            this.$router.go(-1);
+          });
+        } else {
+          if (users.length > 0) {
+            for (var i = 0; i < users.length; i++) {
+              result[users[i].userId] = users[i].name;
+            }
+          }
+
+          if (result != null) this.result = result;
+          console.log(this.result);
+          this.$router.go(-1);
+        }
       } else {
         var parentId = this.stack[this.stack.length - 1].parentId;
         var data = this.tree[parentId].data;
