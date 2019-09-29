@@ -8,20 +8,20 @@
     <div class="groupinfo">
       <van-cell-group>
         <van-field v-model="groupName" placeholder="请输入群组名" label="群组名称:" />
-        <van-field
+        <!-- <van-field
           v-model="inviteReason"
           placeholder="请输入邀请理由"
           rows="1"
           label="邀请理由:"
           autosize
           type="textarea"
-        />
+        />-->
         <van-cell title="选择成员:" is-link :value="result.length" @click="chooseMember()" />
       </van-cell-group>
     </div>
     <div class="receiver-list">
       <van-divider>已选择人员</van-divider>
-      <div >
+      <div>
         <van-cell v-for="(item,index) in result" :key="index" :title="item.name">
           <van-icon slot="right-icon" name="cross" color="red" @click="removeReceiver(index)" />
         </van-cell>
@@ -32,37 +32,63 @@
 
 <script>
 import eventBus from "../../../../util/eventBus";
-
+import IDBMethods from "../../../../api/IndexedDbMethods";
+import { createGroup } from "../../../../api/group";
 export default {
   data() {
     return {
-      groupName:"",
-      invinviteReasonite:"",
-      result:this.$store.state.result,
-      
+      groupName: this.$store.state.groupName,
+      // invinviteReasonite:"",
+      result: "",
+      userInfo: ""
     };
   },
+  created() {
+    let dbName = localStorage.getItem("userId");
+    IDBMethods.getUserInfo(dbName, "UserInfo", result => {
+      this.userInfo = result[0];
+    });
+    eventBus.$on("chooseMumber",  result=>{
+      this.result = result;
+    });
+  },
   methods: {
-    onClickLeft() {
+    clear() {
       var tree = [];
-      var result = [];
+      var groupName = "";
+      this.$store.commit("setGroupName", groupName);
       this.$store.commit("setTree", tree);
-      this.$store.commit("setResult", result);
+    },
+    onClickLeft() {
+      this.clear();
       this.$router.push("/my_group");
     },
     chooseMember() {
+      this.$store.commit("setGroupName", this.groupName);
       this.$router.push("/choose_member");
     },
     removeReceiver(index) {
       this.result.splice(index, 1);
     },
-    createGroup(){
+    createGroup() {
       var ids = new Array();
-      for(var i=0;i<this.result.length;i++){
+      for (var i = 0; i < this.result.length; i++) {
         ids.push(this.result[i].userId);
       }
+
+      var createUserId = this.userInfo.userId;
       var userIds = ids.join(",");
-      
+      var name = this.groupName;
+      if (name == "") Toast("请输入群组名");
+      else {
+        if (ids.length == 0) Toast("请选择群成员");
+        else {
+          console.log(createUserId, name, userIds);
+          createGroup(createUserId, name, userIds).then(res => {
+            Toast(res.data.msg);
+          });
+        }
+      }
     }
   }
 };

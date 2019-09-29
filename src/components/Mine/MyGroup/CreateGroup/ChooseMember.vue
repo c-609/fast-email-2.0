@@ -2,7 +2,7 @@
   <div>
     <div class="header">
       <van-nav-bar title="创建群组" left-arrow @click-left="goBack" fixed>
-        <van-button slot="right" size="small" type="info" @click="confirm">确认</van-button>
+        <!-- <van-button slot="right" size="small" type="info" @click="confirm">确认</van-button> -->
       </van-nav-bar>
     </div>
 
@@ -49,13 +49,10 @@ export default {
 
       getChildOrg(1).then(res => {
         // data.push(res.data.data);
-
         data = res.data.data;
-        console.log(data);
         list.parentId = 1;
         list.data = data;
         this.list = list;
-        console.log(list);
         this.stack.push(list);
         this.tree[list.parentId] = list;
       });
@@ -63,7 +60,7 @@ export default {
   },
   beforeDestroy() {
     eventBus.$emit("chooseMumber", this.result);
-    this.$store.commit("setResult", this.result);
+    // this.$store.commit("setResult", this.result);
   },
   methods: {
     confirm() {

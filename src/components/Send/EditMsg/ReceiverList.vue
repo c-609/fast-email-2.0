@@ -60,11 +60,10 @@ export default {
       this.selectedGroupsTemp = 1;
     },
     groupUsers() {
-      console.log(this.groupUsers);
-      console.log(this.$store.state.deptUsers);
+
       this.result = [];
       // this.result = this.deptUsers;
-      console.log(this.deptUsers);
+
       if (this.deptUsers.length != 0) {
         for (var i = 0; i < this.deptUsers.length; i++) {
           var _this = this;
@@ -75,7 +74,7 @@ export default {
           );
         }
       }
-      console.log(this.deptUsers);
+ 
       if (this.groupUsers.length != 0) {
         for (var i = 0; i < this.groupUsers.length; i++) {
           var _this = this;
@@ -104,11 +103,10 @@ export default {
     //     this.result[this.deptUsers[i].userId] = this.deptUsers[i].name;
     //   }
     // }
-    console.log(this.groupUsers);
-    console.log(this.$store.state.deptUsers);
+   
     this.result = [];
     // this.result = this.deptUsers;
-    console.log(this.deptUsers);
+   
     if (this.deptUsers.length != 0) {
       for (var i = 0; i < this.deptUsers.length; i++) {
         var _this = this;
@@ -119,7 +117,7 @@ export default {
         );
       }
     }
-    console.log(this.deptUsers);
+    
     if (this.groupUsers.length != 0) {
       for (var i = 0; i < this.groupUsers.length; i++) {
         var _this = this;

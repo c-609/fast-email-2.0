@@ -68,14 +68,13 @@ export default {
     });
     eventBus.$on("userIds", userIds => {
       this.userIds = userIds;
-      console.log(userIds);
     });
   },
   beforeDestroy() {
     eventBus.$off("editMsg");
+    eventBus.$off("userIds");
     if (this.originalMsg != "") {
       eventBus.$emit("receiveMsgDetail", this.originalMsg);
-      console.log(this.originalMsg);
     }
   },
   methods: {
@@ -100,19 +99,19 @@ export default {
       var senderInfo = "";
       var title = "";
       var content = "";
-
       this.$store.commit("setRole", role);
       this.$store.commit("setRoles", roles);
       this.$store.commit("setSenderInfo", this.senderInfo);
       this.$store.commit("setTitle", this.title);
       this.$store.commit("setContent", this.content);
+
       this.clear();
       this.$router.go(-1);
     },
 
     //发送通知
     onClickRight() {
-      console.log(this.senderInfo);
+      
       var senderId = this.senderInfo.userId;
       var senderName = this.senderInfo.name;
       var content = this.content;
@@ -121,7 +120,6 @@ export default {
       var deptId = this.role.deptId;
       var roleId = this.role.roleId;
 
-      console.log(this.role);
       console.log(
         senderId,
         senderName,
@@ -165,7 +163,6 @@ export default {
           var userInfo = result[0];
           this.roles = userInfo.identityEntities;
           this.senderInfo = userInfo;
-          console.log(userInfo);
         });
       }
     },

@@ -20,6 +20,8 @@ export default new Vuex.Store({
     selectedGroups: [], //已选择群组
     groupUsers: [], //已选择群组请求到的用户
     deptUsers: [], //已选择机构请求到的用户
+
+    groupName:"", //创建群组时的qunm
   },
   mutations: {
     getTab(state, tab) {
@@ -65,6 +67,9 @@ export default new Vuex.Store({
     setDeptUsers(state, deptUsers) {
       state.deptUsers = deptUsers;
     },
+    setGroupName(state, groupName){
+      state.groupName = groupName;
+    }
 
   }
 })
