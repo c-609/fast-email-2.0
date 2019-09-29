@@ -25,7 +25,7 @@
 
     <!-- 收件人 -->
     <div class="receiver">
-      <van-cell title="收件人" is-link :value="persons" @click="goSelectList" />
+      <van-cell title="收件人" is-link :value="userIds.length" @click="goSelectList" />
     </div>
 
     <!-- 通知内容 -->
@@ -55,8 +55,8 @@ export default {
       roles: this.$store.state.roles, //用户的所有身份
       oldRole: this.$store.state.role,
       userIds: [],
-      deptId:this.$store.state.deptId,
-      senderInfo:this.$store.state.senderInfo,
+      deptId: this.$store.state.deptId,
+      senderInfo: this.$store.state.senderInfo
     };
   },
   created() {
@@ -97,8 +97,15 @@ export default {
     onClickLeft() {
       var roles = []; //请求到的发件身份
       var role = ""; //选择的发件身份
+      var senderInfo = "";
+      var title = "";
+      var content = "";
+
       this.$store.commit("setRole", role);
       this.$store.commit("setRoles", roles);
+      this.$store.commit("setSenderInfo", this.senderInfo);
+      this.$store.commit("setTitle", this.title);
+      this.$store.commit("setContent", this.content);
       this.clear();
       this.$router.go(-1);
     },
@@ -113,16 +120,9 @@ export default {
       var userIds = this.userIds.join(",");
       var deptId = this.role.deptId;
       var roleId = this.role.roleId;
-      
-     console.log(this.role);
-     console.log(senderId,
-        senderName,
-        content,
-        title,
-        userIds,
-        deptId,
-        roleId);
-      sendMsg(
+
+      console.log(this.role);
+      console.log(
         senderId,
         senderName,
         content,
@@ -130,9 +130,30 @@ export default {
         userIds,
         deptId,
         roleId
-      ).then(res => {
-        Toast(res.data.msg);
-      });
+      );
+      if (title == "") this.$toast("请输入标题");
+      else {
+        if (senderName == "") this.$toast("请选择发件身份");
+        else {
+          if (userIds == "") this.$toast("请选择收件身份");
+          else {
+            if (content == "") this.$toast("请输入通知内容");
+            else {
+              sendMsg(
+                senderId,
+                senderName,
+                content,
+                title,
+                userIds,
+                deptId,
+                roleId
+              ).then(res => {
+                Toast(res.data.msg);
+              });
+            }
+          }
+        }
+      }
     },
 
     //打开发件身份弹出层时触发

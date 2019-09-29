@@ -1,7 +1,9 @@
 <template>
   <div class="viewOrganization">
     <div class="header">
-      <van-nav-bar title="我的机构" left-arrow @click-left="goBack" fixed></van-nav-bar>
+      <van-nav-bar title="我的机构" left-arrow @click-left="goBack" fixed>
+        <van-button slot="right" size="small" type="info" @click="confirm">确认</van-button>
+      </van-nav-bar>
     </div>
     <div class="content">
       <org-list :data="list" :key="list.parentId" @goNext="goNext" @updateData="updateData"></org-list>
@@ -75,6 +77,10 @@ export default {
   //   // eventBus.$off("selectList");
   },
   methods: {
+    confirm() {
+      this.exitChooseMenber();
+    },
+
     //通过id判断要请求的数据tree中是否存在，返回 0不存在，1存在
     findDataInTree(id) {
       if (this.tree[id] == null || this.tree[id] == undefined) {
@@ -307,6 +313,9 @@ export default {
         this.list = this.stack[this.stack.length - 1];
         this.currentList = "";
       }
+    },
+    exitChooseMenber(){
+
     }
   }
 };

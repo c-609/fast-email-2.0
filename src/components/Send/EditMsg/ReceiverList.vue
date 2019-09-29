@@ -24,7 +24,7 @@
     </van-popup>
 
     <div class="receiver-list">
-      <van-divider>已选择人员</van-divider>
+      <van-divider>已选择人员( {{usersNum}} )</van-divider>
       <div v-for="(item,index) in result" :key="index">
         <van-cell v-if="item" :title="item">
           <van-icon slot="right-icon" name="cross" color="red" @click="removeReceiver(index)" />
@@ -51,7 +51,8 @@ export default {
       selectedGroupsTemp: 0,
       role: this.$store.state.role,
       groupUsers: this.$store.state.groupUsers,
-      deptUsers: this.$store.state.deptUsers
+      deptUsers: this.$store.state.deptUsers,
+      usersNum:0
     };
   },
   watch: {
@@ -85,7 +86,9 @@ export default {
           );
         }
       }
+      this.usersNum = this.getUserIds().length;
     }
+    
   },
   created() {
     // console.log(this.result);
@@ -127,19 +130,23 @@ export default {
         );
       }
     }
+    this.usersNum = this.getUserIds().length;
   },
   beforeDestroy() {
     //将已选人员id数组传给editMsg
-      var userIds = [];
-      for (var i = 0; i < this.result.length; i++) {
-        if (this.result[i]) userIds.push(i);
-      }
-      
-    eventBus.$emit("userIds", userIds);console.log(userIds)
+    var userIds = this.getUserIds(); 
+    eventBus.$emit("userIds", userIds); 
     this.$store.commit("setResult", this.result);
     this.$store.commit("setGroupUsers", this.groupUsers);
   },
   methods: {
+    getUserIds(){
+      var userIds = [];
+      for (var i = 0; i < this.result.length; i++) {
+        if (this.result[i]) userIds.push(i);
+      }
+      return userIds;
+    },
     onClickLeft() {
       
       
