@@ -10,43 +10,45 @@
       <p>创建时间: {{groupInfo.createTime}}</p>
     </div>
     <div class="member">
-      <van-cell title="查看所有成员" icon="friends-o" is-link value="24人" @click="view_all_member()" />
+      <van-cell title="查看所有成员" icon="friends-o" is-link :value="memberNum+'人'" @click="view_all_member()" />
     </div>
 
-    <div class="inviteReason">
-      <p>邀请理由:</p>
-    </div>
-    <div class="reason">
-      <p>为方便我院开展xxxxxxx,特此建群。</p>
+    
+    <div class="member">
+
     </div>
   </div>
 </template>
 
 <script>
 import eventBus from "../../../../util/eventBus"
+import {getGroup} from "../../../../api/group"
 export default {
   data(){
     return{
       groupInfo:'',
       memberList:'',
+      memberNum:'',
     }
   },
   created() {
-    eventBus.$on("groupMsg", res => {   
-      this.groupInfo = res;
-      this.memberList = res.userInfoEntityList;
-    });
+    let groupId = localStorage.getItem('groupId');
+     getGroup(groupId).then(res=>{
+       console.log("---------")
+       console.log(res.data.data)
+        this.groupInfo = res.data.data
+        this.memberList = res.data.data.userInfoEntityList;
+        this.memberNum = res.data.data.userInfoEntityList.length;
+      })
   },
-   beforeDestroy() {
-    eventBus.$off("groupMsg");
+  beforeDestroy() {
+     eventBus.$emit("memberList", this.memberList);
   },
   methods: {
     onClickLeft() {
       this.$router.push("/my_group");
     },
     view_all_member() {
-      eventBus.$emit("memberList", this.memberList);
-      console.log(this.memberList)
       this.$router.push("/view_all_member");
     }
   }

@@ -32,18 +32,32 @@ export function getUnreadList(messageId) {
 }
 
 //发布一条通知
-export function sendMsg(senderId, senderName, content, title, userIds, deptId, roleId) {
-  return request({
-    url: '/send',
-    method: 'post',
-    params: {
-      senderId,
-      senderName,
-      content,
-      title,
-      userIds,
-      deptId,
-      roleId
-    }
-  })
-}
+// export function sendMsg(senderId, senderName, content, title, userIds, deptId, roleId) {
+//   return request({
+//     url: '/send',
+//     method: 'post',
+//     params: {
+//       senderId,
+//       senderName,
+//       content,
+//       title,
+//       userIds,
+//       deptId,
+//       roleId
+//     }
+//   })
+// }
+export function sendMsg(senderId,content,title,userIds,deptId,roleId){
+      var Info = new FormData();
+      Info.append('senderId',senderId);
+      Info.append('content',content);
+      Info.append('title',title);
+      Info.append('userIds',userIds);
+      Info.append('deptId',deptId);
+      Info.append('roleId',roleId);
+      return request({
+          url:'/msg/process/send',
+          method:'post',
+          data:Info
+      })
+  }

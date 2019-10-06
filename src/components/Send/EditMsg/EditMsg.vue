@@ -139,7 +139,7 @@ export default {
             else {
               sendMsg(
                 senderId,
-                senderName,
+                // senderName,
                 content,
                 title,
                 userIds,

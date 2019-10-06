@@ -6,15 +6,16 @@
       </van-nav-bar>
     </div>
     <div class="search">
-      <van-search placeholder="请输入搜索关键词" v-model="value" />
+      <van-search placeholder="请输入搜索关键词" v-model="search" />
     </div>
     <div class="group">
-      <van-cell-group v-for="(item,index) in createdGroup" :key="index">
-        <van-cell :title="item.name" value="12/15" :label="item.createTime" @click="view_myGroup(item.id)" />
+      <van-cell-group v-for="(item,index) in CreatedGroup" :key="index">
+        <van-cell :title="item.name" value="" :label="item.createTime" @click="view_myGroup(item.id)" />
 
        
       </van-cell-group>
     </div>
+    <span class="msg" v-show="show_msg">暂无任何群组</span>
   </div>
 </template>
 
@@ -24,8 +25,11 @@ import eventBus from "../../../util/eventBus"
 export default {
   data(){
     return{
+      search:'',
       createdGroup:[],
-      groupMsg:[],
+      CreatedGroup:[],
+      groupId:'',
+      show_msg:false,
     }
   },
   created(){
@@ -35,8 +39,35 @@ export default {
       this.createdGroup = res.data.data;
     })
   },
+    computed: {
+    tables() {
+      const search = this.search;
+      if (search) {
+        return this.createdGroup.filter(data => {
+          return Object.keys(data).some(key => {
+            return (
+              String(data[key])
+                .toLowerCase()
+                .indexOf(search) > -1
+            );
+          });
+        });
+      }
+      return this.createdGroup;
+    }
+  },
+  watch: {
+    tables() {
+      this.CreatedGroup = this.tables;
+      if(this.CreatedGroup == ''){
+        this.show_msg = true;
+      }else{
+        this.show_msg = false;
+      }
+    }
+  },
   beforeDestroy() {
-    
+    //  eventBus.$emit("groupId", this.groupId);
   },
   methods: {
     goPath(url) {
@@ -46,11 +77,8 @@ export default {
       this.$router.push("/mine");
     },
     view_myGroup(id) {
+     localStorage.setItem('groupId',id);
       this.$router.push("/view_my_group");
-      getGroup(id).then(res=>{
-        // this.groupMsg = res.data.data;
-        eventBus.$emit("groupMsg", res.data.data);
-      })
     },
     addGroup() {
       this.$router.push("/create_group");
@@ -60,6 +88,15 @@ export default {
 </script>
 
 <style scoped>
+.msg{
+  position:fixed;
+  top:50%;
+  margin-top: -30px;
+  left: 50%;
+  margin-left: -42px;
+  color: #969799;
+  font-size: 14px;
+}
 .myGroup {
   width: 100%;
   height: 100%;
