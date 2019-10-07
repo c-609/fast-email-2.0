@@ -92,26 +92,44 @@ export default {
       this.$store.commit("setDeptUsers", deptUsers);
       this.$store.commit("setGroupUsers", groupUsers);
     },
-    //返回
-    onClickLeft() {
+
+    clearAll() {
       var roles = []; //请求到的发件身份
       var role = ""; //选择的发件身份
       var senderInfo = "";
       var title = "";
       var content = "";
+      var result = []; //已选择人员
+      var tree = []; //机构发请求得到的数据
+      var groups = []; // 群组向本地取到的用户群组
+      var selectedGroups = []; //已选择群组
+      var deptUsers = [];
+      var groupUsers = [];
+      this.$store.commit("setResult", result);
+      this.$store.commit("setTree", tree);
+      this.$store.commit("setGroups", groups);
+      this.$store.commit("setSelectedGroups", selectedGroups);
+      this.$store.commit("setDeptUsers", deptUsers);
+      this.$store.commit("setGroupUsers", groupUsers);
       this.$store.commit("setRole", role);
       this.$store.commit("setRoles", roles);
-      this.$store.commit("setSenderInfo", this.senderInfo);
-      this.$store.commit("setTitle", this.title);
-      this.$store.commit("setContent", this.content);
+      this.$store.commit("setSenderInfo", senderInfo);
+      this.$store.commit("setTitle", title);
+      this.$store.commit("setContent", content);
+    },
+    //返回
+    onClickLeft() {
+      this.clearAll();
+      //     var active = 2;
+      //  this.$store.commit("setActive", active);
+      //  console.log(this.$store.state.active);
+      // this.$router.push("/send");
 
-      this.clear();
-      this.$router.go(-1);
+      this.router.go(-1);
     },
 
     //发送通知
     onClickRight() {
-      
       var senderId = this.senderInfo.userId;
       var senderName = this.senderInfo.name;
       var content = this.content;
@@ -147,6 +165,8 @@ export default {
                 roleId
               ).then(res => {
                 Toast(res.data.msg);
+                this.clearAll();
+                this.$router.go(-1);
               });
             }
           }
@@ -163,6 +183,7 @@ export default {
           var userInfo = result[0];
           this.roles = userInfo.identityEntities;
           this.senderInfo = userInfo;
+          console.log(this.senderInfo);
         });
       }
     },

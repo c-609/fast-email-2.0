@@ -3,7 +3,7 @@
     <!-- 头部 -->
     <div class="header">
       <van-nav-bar title="选择收件人" left-arrow @click-left="onClickLeft" @click-right="onClickRight">
-        <van-button type="info" slot="right" size="small">确认</van-button>
+        <van-button type="info" slot="right" size="small" @click="onClickLeft">确认</van-button>
       </van-nav-bar>
     </div>
 
@@ -14,6 +14,9 @@
 
     <!-- 选择群组 -->
     <van-popup v-model="show" @open="openPopup" @close="closePopup">
+      <van-nav-bar title="选择群组"   @click-left="onClickLeft" @click-right="onClickRight">
+         <van-button type="info" slot="right" size="small" @click="closePopup">确认</van-button>
+      </van-nav-bar>
       <van-checkbox-group v-model="selectedGroups">
         <van-cell-group>
           <van-cell v-for="item in groups" clickable :key="item.id" :title="item.name">
@@ -153,6 +156,7 @@ export default {
     onClickRight() {},
     //移除收件人
     removeReceiver(index) {
+      this.usersNum--;
       this.result.splice(index, 1);
     },
     //点击我的群组
@@ -179,6 +183,7 @@ export default {
 
     //关闭群组
     closePopup() {
+      this.show = false;
       if (this.selectedGroupsTemp == 1) {
         var ids = new Array();
 
@@ -215,7 +220,7 @@ export default {
 </script>
 <style scoped>
 .van-popup {
-  width: 340px;
+  width: 100%;
   min-height: 100px;
 }
 </style>

@@ -8,6 +8,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    active:0,//底部四个导航bar
     tab: 0, //首页的三个tab
     title: "",
     content: "",
@@ -24,6 +25,9 @@ export default new Vuex.Store({
     groupName:"", //创建群组时的qunm
   },
   mutations: {
+    setActive(state, active){
+      state.active = active;
+    },
     getTab(state, tab) {
       state.tab = tab;
     },

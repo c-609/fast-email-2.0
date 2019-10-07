@@ -61,3 +61,15 @@ export function sendMsg(senderId,content,title,userIds,deptId,roleId){
           data:Info
       })
   }
+
+  //读取通知后设置消息为已读
+  export function editMsgState(messageId, userId){
+    return request({
+      url:'/msg/edit_state_read',
+      method:'post',
+      params:{
+        messageId, userId
+      }
+    })
+
+  }

@@ -86,6 +86,8 @@ export default {
           console.log(createUserId, name, userIds);
           createGroup(createUserId, name, userIds).then(res => {
             Toast(res.data.msg);
+            this.clear();
+            this.$router.push("/my_group");
           });
         }
       }
