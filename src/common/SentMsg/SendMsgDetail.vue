@@ -20,12 +20,28 @@
     </div>
     <van-popup v-model="show" :style="{ height: '100%', width: '100%' } ">
       <div class="header">
-        <van-nav-bar title="未读人员" left-arrow @click-left="showList" fixed></van-nav-bar>
-        <div class="content_list">
-          <div class="cell" v-for="(item,index) in unReadList" :key="index">
-            <span>{{item.name}}</span>
-            <van-icon name="cross" size="16" class="cell-icon" @click="remove_unread(item.userId)"/>
-          </div>
+        <van-nav-bar title="未读人员" left-arrow @click-left="showList" fixed>
+          <van-button type="info" slot="right" size="small" @click="handleRead">标记为已读</van-button>
+        </van-nav-bar>
+        <div class="content">
+          <van-checkbox-group v-model="result">
+            <van-cell-group>
+              <van-cell
+                v-for="(item, index) in list"
+                clickable
+                :key="index"
+                :title="item.name"
+                @click="toggle(index)"
+              >
+                <van-checkbox
+                  v-show="show"
+                  :name="item"
+                  ref="checkboxes"
+                  slot="right-icon"
+                />
+              </van-cell>
+            </van-cell-group>
+          </van-checkbox-group>
         </div>
       </div>
     </van-popup>
@@ -44,6 +60,8 @@ export default {
   name: "SendMsgDetail",
   data() {
     return {
+      list: [ ],
+      result: [ ],
       show:false,
       unReadList:'',
       unReadNum:'',
@@ -54,6 +72,7 @@ export default {
   created() {
     eventBus.$on("sendMsgDetail", res => {   
       this.msg = res;
+      console.log(res)
     });
   },
   mounted(){
@@ -80,11 +99,19 @@ export default {
     },
     //查看未读名单
     CheckUnReadList(){
-      console.log(this.unReadList)
+      getUnreadList(this.msg.id).then(res=>{
+        this.list = res.data.data;
+      })
+      
       this.show = true;
     },
     //S删除
-    onClickRight() {}
+    onClickRight() {},
+
+    //所选未读人员转为已读
+    handleRead(){
+      
+    }
   }
 };
 </script>

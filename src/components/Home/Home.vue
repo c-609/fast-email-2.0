@@ -76,7 +76,7 @@
 import eventBus from "../../util/eventBus";
 import BaseMsgCell from "./../../common/BaseMsgCell";
 import BaseInviteCell from "./../../common/BaseInviteCell";
-import {getUnreadMsg,getSendingMsg} from "../../api/message"
+import {getUnreadMsg,getSendingMsg,editMsgState} from "../../api/message"
 import IDBMethods from "../../api/IndexedDbMethods"
 export default {
   components: {
@@ -121,6 +121,7 @@ export default {
   },
   data() {
     return {
+      userInfo:"",
       isLoading:false,
       show_msg:false,
       receiveMsgs: [],
@@ -149,6 +150,44 @@ export default {
       msg: ""
     };
   },
+  created(){
+    let dbName = localStorage.getItem('userId')+"NewMsg";
+    IDBMethods.getAllMsg(dbName,"NewMsg",0,result=>{
+      this.receiveMsgs = result;
+      this.receiveNumber = this.receiveMsgs.length;
+    });
+    let db  = localStorage.getItem("userId");
+        IDBMethods.getUserInfo(db , "UserInfo", result => {
+          this.userInfo = result[0];
+        });
+  },
+  mounted(){
+    let userId = localStorage.getItem('userId');
+    let dbName = userId+"NewMsg"
+    IDBMethods.getAllMsgID(dbName,"NewMsg",result=>{
+      getUnreadMsg(userId,result).then(res=>{
+        if(res.data.data){
+          let msg = res.data.data;
+          for(var i=0; i<msg.length; i++){
+            this.receiveMsgs.unshift(msg[i]);
+             this.receiveNumber = this.receiveMsgs.length;
+          }
+          
+          IDBMethods.addNewMsg(dbName,"NewMsg",res.data.data);
+        }
+    })
+    })
+    getSendingMsg(userId).then(res=>{
+      this.sendMsgs = res.data.data;
+      this.sendNumber = this.sendMsgs.length;
+    })
+  },
+  methods: {
+    goPath(url) {
+      this.$router.push(url);
+    }
+  },
+  
   beforeDestroy() {
     
     eventBus.$emit("receiveMsgDetail", this.msg);
@@ -182,10 +221,14 @@ export default {
       this.sendMsgs = res.data.data;
     })
     },
-    //查看新到通知
+    //查看新到通知,并且通知状态改为已读
     clickReceiveMsg(e) {
       this.receiveNumber--;
       this.msg = e;
+       
+      editMsgState(this.msg.id,this.userInfo.userId).then(res=>{
+        if(res.data.msg=="success")Toast("读取通知后设置消息为已读")
+      })
       this.$router.push("/receive_msg_detail");
     },
     //查看送达中通知

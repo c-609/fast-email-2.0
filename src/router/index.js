@@ -10,6 +10,8 @@ import ReceivedMsg from "@/common/ReceivedMsg/ReceivedMsg";
 import SentMsg from "@/common/SentMsg/SentMsg";
 import InviteMsg from "@/components/Home/InviteMsg/InviteMsg";
 import EditMsg from "@/components/Send/EditMsg/EditMsg";
+import ReceiverList from "@/components/Send/EditMsg/ReceiverList";
+import SelectReceiver from "@/components/Send/EditMsg/SelectReceiver";
 import ViewOrganization from "@/components/Mine/ViewOrganization/ViewOrganization";
 import MyGroup from "@/components/Mine/MyGroup/MyGroup";
 import ViewMyGroup from "@/components/Mine/MyGroup/ViewMyGroup/ViewMyGroup";
@@ -17,6 +19,7 @@ import ViewAllMember from "@/components/Mine/MyGroup/ViewMyGroup/ViewAllMember";
 import JoinedGroup from "@/components/Mine/JoinedGroup/JoinedGroup";
 import ViewJoinedGroup from "@/components/Mine/JoinedGroup/ViewJoinedGroup";
 import CreateGroup from "@/components/Mine/MyGroup/CreateGroup/CreateGroup";
+import ChooseMember from "@/components/Mine/MyGroup/CreateGroup/ChooseMember";
 import ReceiveMsgDetail from "../common/ReceivedMsg/ReceiveMsgDetail.vue";
 import SendMsgDetail from "../common/SentMsg/SendMsgDetail.vue";
 import RecycleList from "@/components/Mine/RecycleBin/RecycleList";
@@ -124,6 +127,22 @@ export default new Router({
       }
     },
     {
+      path: "/receiver_list",
+      name: ReceiverList,
+      component: ReceiverList,
+      meta: {
+        showTabbar: false
+      }
+    },
+    {
+      path: "/select_receiver",
+      name: SelectReceiver,
+      component: SelectReceiver,
+      meta: {
+        showTabbar: false
+      }
+    },
+    {
       path: "/invite_msg",
       name: InviteMsg,
       component: InviteMsg,
@@ -197,6 +216,15 @@ export default new Router({
       path: "/create_group",
       name: CreateGroup,
       component: CreateGroup,
+      meta: {
+        showTabbar: false,
+        index:6
+      }
+    },
+    {
+      path: "/choose_member",
+      name: ChooseMember,
+      component: ChooseMember,
       meta: {
         showTabbar: false,
         index:6

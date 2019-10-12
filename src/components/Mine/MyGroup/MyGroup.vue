@@ -2,7 +2,7 @@
   <div class="myGroup">
     <div class="header">
       <van-nav-bar title="我的群组" left-arrow @click-left="onClickLeft" fixed>
-        <van-icon name="plus" slot="right" color="#191f25" size="18" @click="createGroup()" />
+        <van-icon name="plus" slot="right" color="#191f25" size="18" @click="addGroup()" />
       </van-nav-bar>
     </div>
     <div class="search">
@@ -80,7 +80,7 @@ export default {
       localStorage.setItem('groupId',id);
       this.$router.push("/view_my_group");
     },
-    createGroup() {
+    addGroup() {
       this.$router.push("/create_group");
     }
   }

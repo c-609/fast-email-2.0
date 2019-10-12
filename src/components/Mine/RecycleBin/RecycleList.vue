@@ -1,4 +1,4 @@
-<template>
+ <template>
   <div>
     <!-- 头部 -->
     <div class="header">

@@ -1,4 +1,13 @@
 import request from 'axios'
+export  function  createGroup(createUserId,  name,  userIds)  {    
+    return  request({        
+        url:   '/manage/group/create',
+                
+        method:   'post',
+                
+        params:  {  createUserId,  name,  userIds  }    
+    })
+}
 //请求用户创建的群组
 export function getCreatedGroup(userId) {
     return request({
@@ -40,14 +49,7 @@ export function addMember(groupId, userIds) {
     })
 }
 
-//创建一个群组
-export function createGroup(createUserId, name, userIds) {
-    return request({
-        url: '/manage/group/create',
-        method: 'post',
-        params: { createUserId, name, userIds }
-    })
-}
+
 //退出群组
 export function quietGroup(userId, groupId) {
     return request({

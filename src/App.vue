@@ -47,7 +47,7 @@ export default {
         normal: "//./assets/4.png",
         active: "//./assets/4.png"
       },
-      active: 0
+      active: this.$store.state.active
     };
   },
   mounted() {

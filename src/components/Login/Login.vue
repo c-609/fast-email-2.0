@@ -39,7 +39,7 @@ export default {
             let userId = res.data.data.id;
               getUserInformation(userId).then(res => {
                    
-              
+                console.log(res);
                
                   let data = res.data.data;
                   let dbName = userId;
