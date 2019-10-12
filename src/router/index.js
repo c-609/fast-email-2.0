@@ -57,8 +57,12 @@ export default new Router({
              localStorage.setItem('url',"/home")
              Notify({ type: 'success', message: '登录成功', duration: 600 });
             }else{
+              console.log("00000000000")
               localStorage.setItem('url',"/login")
             }
+          }).catch(err =>{
+            Notify({ type: 'danger', message: '网络连接错误', duration: 1500 });
+            localStorage.setItem('url',"/home")
           })
           return localStorage.getItem("url");
         }else{

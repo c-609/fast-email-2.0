@@ -24,6 +24,7 @@
 <script>
 import BaseMsgCell from "../../../common/BaseMsgCell";
 import eventBus from "../../../util/eventBus";
+import IDBMethods from "../../../api/IndexedDbMethods"
 export default {
   name: "RecycleList",
   components: {
@@ -31,20 +32,7 @@ export default {
   },
   data() {
     return {
-      msgList: [
-        {
-          title: "title", //通知标题
-          status: "weidu", // 通知状态或者未读人员比例
-          content: "通知状态或者未读人员比例", // 通知内容
-          time: "2019-8-9" // 时间
-        },
-        {
-          title: "title1", //通知标题
-          status: "weidu1",
-          content: "nihao1", // 通知内容
-          time: "2019-8-91" // 时间
-        }
-      ],
+      msgList: [],
       msg: ""
     };
   },
@@ -57,6 +45,12 @@ export default {
       }
       return value;
     }
+  },
+  created(){
+    let dbName = localStorage.getItem('userId')+"NewMsg";
+    IDBMethods.getAllMsg(dbName,"NewMsg",2,result=>{
+      this.msgList = result;
+    })
   },
   beforeDestroy() {
     eventBus.$emit("receiveMsgDetail", this.msg);

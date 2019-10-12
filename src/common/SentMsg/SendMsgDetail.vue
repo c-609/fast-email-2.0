@@ -16,31 +16,16 @@
           发布身份 : {{msg.identity.roleCNName}}
         </van-collapse-item>
       </van-collapse>
-      <van-cell title="接收人员" is-link />
       <van-cell title="未读人员" is-link :value="unReadNum" @click="CheckUnReadList()"/>
     </div>
     <van-popup v-model="show" :style="{ height: '100%', width: '100%' } ">
       <div class="header">
         <van-nav-bar title="未读人员" left-arrow @click-left="showList" fixed></van-nav-bar>
-        <div class="content">
-          <van-checkbox-group v-model="result">
-            <van-cell-group>
-              <van-cell
-                v-for="(item, index) in list"
-                clickable
-                :key="item"
-                :title="`复选框 ${item}`"
-                @click="toggle(index)"
-              >
-                <van-checkbox
-                  v-show="show"
-                  :name="item"
-                  ref="checkboxes"
-                  slot="right-icon"
-                />
-              </van-cell>
-            </van-cell-group>
-          </van-checkbox-group>
+        <div class="content_list">
+          <div class="cell" v-for="(item,index) in unReadList" :key="index">
+            <span>{{item.name}}</span>
+            <van-icon name="cross" size="16" class="cell-icon" @click="remove_unread(item.userId)"/>
+          </div>
         </div>
       </div>
     </van-popup>
@@ -59,8 +44,6 @@ export default {
   name: "SendMsgDetail",
   data() {
     return {
-      list: ['a', 'b', 'c'],
-      result: ['a', 'b'],
       show:false,
       unReadList:'',
       unReadNum:'',
@@ -85,8 +68,8 @@ export default {
     eventBus.$off("sendMsgDetail");
   },
   methods: {
-    toggle(index) {
-      this.$refs.checkboxes[index].toggle();
+    remove_unread(userId){
+      alert(userId)
     },
     //返回
     onClickLeft() {
@@ -123,17 +106,24 @@ export default {
   border-bottom: 0px;
 }
 .content {
-  margin-top: 44px;
+  margin-top: 10px;
+}
+.content_list {
+  margin-top: 46px;
 }
 .cell {
   height: 40px;
   line-height: 40px;
   width: 100%;
-  background-color: pink;
   padding-left: 15px;
 }
 .cell span {
   color: #191f25;
   font-size: 16px;
+}
+.cell-icon{
+  position: absolute;
+  right: 10px;
+  margin-top: 13px;
 }
 </style>

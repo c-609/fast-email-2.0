@@ -2,15 +2,15 @@
   <div class="mine">
     <div class="header">
       个人中心
-      <van-icon
+      <!-- <van-icon
         name="volume-o"
         style="float:right;padding:13px 15px 0 0;"
         size="18"
         @click="clickSetting()"
-      />
-      <div class="sys_msg_icon" v-show="new_sys_msg">
+      /> -->
+      <!-- <div class="sys_msg_icon" v-show="new_sys_msg">
 
-      </div>
+      </div> -->
     </div>
     <div class="card">
       <div class="identify">
@@ -32,7 +32,7 @@
       </div>
       <img src="../../assets/hdImg_de21995e655487fd40cc7238ff32abc415670486495.jpg" />
       <div class="edit">
-        <van-icon name="edit" color="white" size="14" class="edit-icon" @click="clickSetting()"></van-icon>
+        <van-icon name="edit" color="white" size="14" class="edit-icon"></van-icon>
       </div>
     </div>
     <div class="group">
@@ -90,9 +90,9 @@ export default {
     goPath(url) {
       this.$router.push(url);
     },
-    clickSetting() {
-      this.$router.push('/sys_msg')
-    }
+    // clickSetting() {
+    //   this.$router.push('/sys_msg')
+    // }
   }
 };
 </script>

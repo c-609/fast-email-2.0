@@ -7,34 +7,69 @@
     </div>
     <div class="info">
       <ul>
-        <li>群组名称: 查寝群</li>
-        <li>邀请人: 张三</li>
-        <li>邀请时间: 2019-08-08 14:45:45</li>
+        <li>群组名称: {{groupInfo.groupName}}</li>
+        <li>邀请人: {{groupInfo.createUser.name}}</li>
+        <li>邀请时间: {{groupInfo.createTime}}</li>
       </ul>
     </div>
-    <div class="reason_p">
+    <!-- <div class="reason_p">
       <span>邀请理由:</span>
     </div>
     <div class="inviteReason">
       <span>为方便我院开展xxxxxxx，特此建群。</span>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
+import eventBus from "../../../util/eventBus"
+import {getGroup,quietGroup} from "../../../api/group"
 export default {
+  data() {
+    return {
+      groupInfo:'',
+      groupId:''
+    }
+  },
   methods: {
     quit_group() {
-      this.$toast({
-        message: "退出群组",
-        duration: 1000,
-        position: "bottom"
-      });
+      let userId = localStorage.getItem('userId');
+      console.log("111111")
+      quietGroup(10,this.groupId).then(res=>{
+        console.log(res)
+        if(res.data.code == 0){
+           this.$toast({
+            message: "退出成功",
+            duration: 1000,
+            position: "bottom"
+          });
+          this.$router.push('/joined_group')
+        }else{
+          this.$toast({
+            message: "退出失败",
+            duration: 1000,
+            position: "bottom"
+          });
+        }
+      })
     },
+  
     onClickLeft() {
       this.$router.push("/joined_group");
     }
-  }
+  },
+  created(){
+    eventBus.$on("joinedId", res => {
+      this.groupId = res;
+        getGroup(res).then(res=>{
+          this.groupInfo = res.data.data;
+        })
+    
+    });
+  },
+  beforeDestroy() {
+    eventBus.$off("joinedId");
+  },
 };
 </script>
 

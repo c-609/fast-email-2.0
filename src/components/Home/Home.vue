@@ -8,6 +8,11 @@
           <span style="display:inline; color:#ff943e">{{receiveNumber}}</span>
         </div>
         <div class="footer">
+          <div class="msg" v-show="show_msg">
+            <br><br><br><br><br><br>
+            <span >暂无任何通知</span>
+          </div>
+          
           <div v-for="(item,index) in receiveMsgs" :key="index">
             <base-msg-cell
               :disabled="true"
@@ -81,10 +86,13 @@ export default {
   created(){
     let dbName = localStorage.getItem('userId')+"NewMsg";
     IDBMethods.getAllMsg(dbName,"NewMsg",0,result=>{
+      console.log(result)
       this.receiveMsgs = result;
+      this.receiveNumber = result.length
     })
   },
   mounted(){
+    
     let userId = localStorage.getItem('userId');
     let dbName = userId+"NewMsg"
     IDBMethods.getAllMsgID(dbName,"NewMsg",result=>{
@@ -94,14 +102,17 @@ export default {
           for(var i=0; i<msg.length; i++){
             this.receiveMsgs.unshift(msg[i]);
           }
-          
           IDBMethods.addNewMsg(dbName,"NewMsg",res.data.data);
         }
     })
     })
     getSendingMsg(userId).then(res=>{
       this.sendMsgs = res.data.data;
+       this.sendNumber = res.data.data.length
     })
+    if(this.receiveMsgs == null){
+      this.show_msg = true;
+    }
   },
   methods: {
     goPath(url) {
@@ -111,7 +122,7 @@ export default {
   data() {
     return {
       isLoading:false,
-      tab: this.$store.state.tab,
+      show_msg:false,
       receiveMsgs: [],
       sendMsgs:'',
       inviteMsgs: [
@@ -131,15 +142,15 @@ export default {
         }
       ],
 
-      receiveNumber: 0, //新到通知数量
-      sendNumber: 0, // 发送通知的数量
-      inviteNumber: 0, //群组邀请消息数量
+      receiveNumber: '', //新到通知数量
+      sendNumber: '', // 发送通知的数量
+      inviteNumber: '', //群组邀请消息数量
 
       msg: ""
     };
   },
   beforeDestroy() {
-    this.$store.commit("getTab", this.tab);
+    
     eventBus.$emit("receiveMsgDetail", this.msg);
     eventBus.$emit("sendMsgDetail", this.msg);
   },
@@ -162,6 +173,9 @@ export default {
             this.$notify({ type: 'primary', message: '刷新成功',duration:500 });
             this.isLoading = false;
           }
+        }).catch(err=>{
+            this.$notify({ type: 'danger', message: '服务器错误',duration:500 });
+            this.isLoading = false;
         })
       })
     getSendingMsg(userId).then(res=>{
@@ -203,10 +217,16 @@ export default {
   padding-bottom: 10px;
 }
 .footer {
+  position: relative;
   margin-bottom: 50px;
 }
 .invite {
   margin-top: 10px;
+}
+.msg span{
+  margin-left: 138px;
+  color: #969799;
+  font-size: 14px;
 }
 </style>>
 

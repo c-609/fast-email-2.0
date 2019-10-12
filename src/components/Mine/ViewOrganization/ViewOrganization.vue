@@ -4,197 +4,60 @@
       <van-nav-bar title="查看学院机构" left-arrow @click-left="onClickLeft" fixed></van-nav-bar>
     </div>
     <div class="content">
-      <Organization v-for="(model, index) in list" :model="model" :key="index"></Organization>
+      <van-checkbox-group v-model="result"  v-for="(item, index) in list"
+          :key="item.id">
+          <div class="cell">
+            <van-checkbox
+            
+              :name="item.id"
+              @click="check(item.id,index)"
+            >
+            </van-checkbox>
+            <van-cell :title="item.name" @click="next(item.id,index)" clickable/>
+            <van-icon name="arrow" class="icon" size="16"/>
+          </div>
+      </van-checkbox-group >
+      
     </div>
   </div>
 </template>
 
 <script>
-import Organization from "../../../base/Organization";
 export default {
-  components: {
-    Organization
-  },
+  
   data() {
     return {
-      list: [
+      list:[
         {
-          id: "1",
-          menuName: "信息院",
-          childTree: [
-            {
-              menuName: "项目进度",
-              childTree: [
-                {
-                  menuName: "项目一",
-                  childTree: [{ menuName: "详细信息" }]
-                },
-                {
-                  menuName: "项目一"
-                },
-                {
-                  menuName: "项目一"
-                },
-                {
-                  menuName: "项目一"
-                },
-                {
-                  menuName: "项目一"
-                },
-                {
-                  menuName: "项目一"
-                },
-                {
-                  menuName: "项目一"
-                },
-                {
-                  menuName: "项目一"
-                },
-                {
-                  menuName: "项目一"
-                },
-                {
-                  menuName: "项目一"
-                },
-                {
-                  menuName: "项目一"
-                },
-                {
-                  menuName: "项目一"
-                },
-                {
-                  menuName: "项目一"
-                },
-                {
-                  menuName: "项目一"
-                },
-                {
-                  menuName: "项目一"
-                },
-                {
-                  menuName: "项目一"
-                }
-              ]
-            },
-            {
-              menuName: "qqqqqqqqqqqqqq"
-            },
-            {
-              menuName: "qqqqqqqqqqqqqq"
-            },
-            {
-              menuName: "qqqqqqqqqqqqqq"
-            },
-            {
-              menuName: "qqqqqqqqqqqqqq"
-            },
-            {
-              menuName: "qqqqqqqqqqqqqq"
-            },
-            {
-              menuName: "qqqqqqqqqqqqqq"
-            },
-            {
-              menuName: "qqqqqqqqqqqqqq"
-            },
-            {
-              menuName: "qqqqqqqqqqqqqq"
-            },
-            {
-              menuName: "qqqqqqqqqqqqqq"
-            },
-            {
-              menuName: "qqqqqqqqqqqqqq"
-            },
-            {
-              menuName: "qqqqqqqqqqqqqq"
-            },
-            {
-              menuName: "qqqqqqqqqqqqqq"
-            },
-            {
-              menuName: "qqqqqqqqqqqqqq"
-            },
-            {
-              menuName: "qqqqqqqqqqqqqq"
-            },
-            {
-              menuName: "qqqqqqqqqqqqqq"
-            },
-            {
-              menuName: "qqqqqqqqqqqqqq"
-            },
-            {
-              menuName: "qqqqqqqqqqqqqq"
-            },
-            {
-              menuName: "qqqqqqqqqqqqqq"
-            },
-            {
-              menuName: "qqqqqqqqqqqqqq"
-            }
-          ]
+           id:'a',
+           name:'信息院',
+           child:[
+             {
+               id:'c',
+               name:'16计科'
+             },
+             {
+               id:'c',
+               name:'16计科'
+             },
+           ] 
         },
         {
-          id: "2",
-          menuName: "物电院"
+           id:'b',
+           name:'物电院',
+           child:[] 
         },
-        {
-          id: "3",
-          menuName: "音舞院"
-        },
-        {
-          id: "4",
-          menuName: "国交院"
-        },
-        {
-          id: "5",
-          menuName: "文学院"
-        },
-        {
-          id: "6",
-          menuName: "商学院"
-        },
-        {
-          id: "7",
-          menuName: "医学院"
-        },
-        {
-          id: "8",
-          menuName: "资环院"
-        },
-        {
-          id: "9",
-          menuName: "xx院"
-        },
-        {
-          id: "10",
-          menuName: "xx院"
-        },
-        {
-          id: "11",
-          menuName: "xx院"
-        },
-        {
-          id: "12",
-          menuName: "xx院"
-        },
-        {
-          id: "13",
-          menuName: "xx院"
-        },
-        {
-          id: "14",
-          menuName: "xx院"
-        },
-        {
-          id: "15",
-          menuName: "xx院"
-        }
-      ]
+      ],
+      result: ['f','b', 'a','e']
     };
   },
   methods: {
+    check(id,index) {
+      console.log(id)
+    },
+    next(id,index){
+      console.log(id)
+    },
     onClickLeft() {
       this.$router.push("/mine");
     }
@@ -216,6 +79,31 @@ export default {
   border-bottom: 1px solid #d2d2d2;
 }
 .content {
+  
   margin-top: 46px;
+  
+}
+.content .van-cell {
+  display: inline-block;
+  position: absolute;
+  padding: 0;
+  margin: 0;
+  margin-left: 5px;
+  line-height: 37px;
+  padding-left: 10px;
+}
+.content .van-checkbox{
+  margin-left: 15px;
+  display: inline-block;
+  padding-top: 9px;
+  padding-bottom: 9px;
+}
+.cell{
+  position: relative;
+} 
+.cell .icon{
+  position: fixed;
+  right: 5px;
+  margin-top: 13px;
 }
 </style>

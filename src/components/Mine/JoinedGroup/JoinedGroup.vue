@@ -4,37 +4,76 @@
       <van-nav-bar title="查看群组" left-arrow @click-left="onClickLeft" fixed></van-nav-bar>
     </div>
     <div class="search">
-      <van-search placeholder="请输入搜索关键词" v-model="value" />
+      <van-search placeholder="请输入搜索关键词" v-model="search" />
     </div>
     <div class="groups">
-      <van-cell-group>
-        <van-cell title="查寝群" value="2019-08-08 16:15:33" label="张三" @click="view_joinedGroup()" />
-        <van-cell title="查寝群" value="2019-08-08 16:15:33" label="张三" @click="view_joinedGroup()" />
-        <van-cell title="查寝群" value="2019-08-08 16:15:33" label="张三" @click="view_joinedGroup()" />
-        <van-cell title="查寝群" value="2019-08-08 16:15:33" label="张三" @click="view_joinedGroup()" />
-        <van-cell title="查寝群" value="2019-08-08 16:15:33" label="张三" @click="view_joinedGroup()" />
-        <van-cell title="查寝群" value="2019-08-08 16:15:33" label="张三" @click="view_joinedGroup()" />
-        <van-cell title="查寝群" value="2019-08-08 16:15:33" label="张三" @click="view_joinedGroup()" />
-        <van-cell title="查寝群" value="2019-08-08 16:15:33" label="张三" @click="view_joinedGroup()" />
-        <van-cell title="查寝群" value="2019-08-08 16:15:33" label="张三" @click="view_joinedGroup()" />
-        <van-cell title="查寝群" value="2019-08-08 16:15:33" label="张三" @click="view_joinedGroup()" />
-        <van-cell title="查寝群" value="2019-08-08 16:15:33" label="张三" @click="view_joinedGroup()" />
-        <van-cell title="查寝群" value="2019-08-08 16:15:33" label="张三" @click="view_joinedGroup()" />
+      <van-cell-group v-for="(item,index) in JoinedGroup" :key="index">
+        <van-cell :title="item.name" value="" :label="item.createTime" @click="view_joinedGroup(item.id)" />
       </van-cell-group>
+    </div>
+    <div class="msg" v-show="showMsg">
+      <span>暂无任何群组</span>
     </div>
   </div>
 </template>
 
 <script>
+import {getJoinedGroup} from '../../../api/group'
+import eventBus from "../../../util/eventBus"
 export default {
+  data(){
+    return {
+      search:'',
+      JoinedGroup:'',
+      joinedGroup:'',
+      showMsg:false,
+      joinedId:'',
+    }
+  },
   methods: {
     onClickLeft() {
       this.$router.push("/mine");
     },
-    view_joinedGroup() {
+    view_joinedGroup(id) {
+      this.joinedId = id;
       this.$router.push("/view_joined_group");
     }
-  }
+  },
+  created(){
+    let userId = localStorage.getItem('userId');
+    getJoinedGroup(userId).then(res=>{
+      this.joinedGroup = res.data.data;
+      console.log(res.data.data)
+      if(!res.data.data) {
+        this.showMsg = true;
+      }
+    })
+  },
+  beforeDestroy() {
+     eventBus.$emit("joinedId", this.joinedId);
+  },
+   computed: {
+    tables() {
+      const search = this.search;
+      if (search) {
+        return this.joinedGroup.filter(data => {
+          return Object.keys(data).some(key => {
+            return (
+              String(data[key])
+                .toLowerCase()
+                .indexOf(search) > -1
+            );
+          });
+        });
+      }
+      return this.joinedGroup;
+    }
+  },
+  watch: {
+    tables() {
+      this.JoinedGroup = this.tables;
+    }
+  },
 };
 </script>
 
@@ -67,5 +106,13 @@ export default {
 }
 .groups {
   margin-top: 106px;
+}
+.msg {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #969799;
+  font-size: 14px;
 }
 </style>

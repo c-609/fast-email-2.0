@@ -23,6 +23,8 @@
 </template>
 <script>
 import eventBus from "./../../util/eventBus";
+import {editRead} from "./../../api/message"
+import IDBMethods from '../../api/IndexedDbMethods'
 export default {
   name: "ReceiveMsgDetail",
   data() {
@@ -34,6 +36,16 @@ export default {
   created() {
     eventBus.$on("receiveMsgDetail", res => {
       this.msg = res;
+      if(res.status == 0){
+        let userId = localStorage.getItem('userId');
+        let dbName = userId+"NewMsg";
+        let messageId = res.id;
+        editRead(userId,messageId).then(res => {
+          if(res.data.code == 0){
+            IDBMethods.editMessageStatus(dbName,"NewMsg",messageId,1);
+          }
+        })
+      }
     });
   },
   beforeDestroy() {

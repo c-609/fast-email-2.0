@@ -35,7 +35,6 @@ export default {
       }else{
         this.isLogin = true;
         loginObj(this.useraccount,this.password).then(res => {
-          console.log(res)
           if(res.data.code == 0){
             let userId = res.data.data.id;
               getUserInformation(userId).then(res => {
