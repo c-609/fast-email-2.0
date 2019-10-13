@@ -166,7 +166,7 @@ export default {
               ).then(res => {
                 Toast(res.data.msg);
                 this.clearAll();
-                this.$router.go(-1);
+                this.$router.push("/send");
               });
             }
           }

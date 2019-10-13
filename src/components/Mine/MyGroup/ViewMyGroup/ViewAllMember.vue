@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="add" v-show="hidshow">
-      <van-icon name="add" size="54" color="#ff9800"></van-icon>
+      <van-icon name="add" size="54" color="#ff9800" @click="addMember()"></van-icon>
     </div>
     
   </div>
@@ -100,6 +100,9 @@ export default {
     },
     onClickLeft() {
       this.$router.push("/view_my_group");
+    },
+    addMember(){
+      this.$router.push('/add_member')
     }
   }
 };
