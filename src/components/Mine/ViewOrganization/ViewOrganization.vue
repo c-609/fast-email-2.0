@@ -56,6 +56,7 @@ export default {
         getChildOrg(id).then(res => {
           if (res.data.data == null) {
             getOrgUsers(id).then(res => {
+              console.log(res.data);
               data = res.data.data;
               for (var i = 0; i < data.length; i++) {
                 data[i].hasChild = 0;

@@ -40,7 +40,8 @@ export default {
         let userId = localStorage.getItem('userId');
         let dbName = userId+"NewMsg";
         let messageId = res.id;
-        editRead(userId,messageId).then(res => {
+        editRead(messageId,userId).then(res => {
+          console.log(res);
           if(res.data.code == 0){
             IDBMethods.editMessageStatus(dbName,"NewMsg",messageId,1);
           }

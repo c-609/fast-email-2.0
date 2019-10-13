@@ -55,7 +55,7 @@
 
 <script>
 import eventBus from "./../../util/eventBus";
-import {getUnreadList} from "../../api/message"
+import {getUnreadList,editRead} from "../../api/message"
 export default {
   name: "SendMsgDetail",
   data() {
@@ -87,6 +87,9 @@ export default {
     eventBus.$off("sendMsgDetail");
   },
   methods: {
+    toggle(index) {
+      this.$refs.checkboxes[index].toggle();
+    },
     remove_unread(userId){
       alert(userId)
     },
@@ -110,15 +113,32 @@ export default {
 
     //所选未读人员转为已读
     handleRead(){
-      
+      let userIds = [];
+      for(var i =0; i<this.result.length; i++){
+        userIds.push(this.result[i].userId);
+      }
+
+      editRead(this.msg.id,userIds).then(res=>{
+        if(res.data.code == 0){
+        Toast("标记成功");
+         this.show =false;
+        }
+        getUnreadList(this.msg.id).then(res=>{
+            if(res.data.code == 0){
+              this.unReadList = res.data.data;
+              this.unReadNum = res.data.data.length;
+            }
+        })
+      })
     }
   }
 };
 </script>
 
 <style scoped>
-.header {
-  border-bottom: 1px solid #d2d2d2;
+.header .content {
+  /* border-bottom: 1px solid #d2d2d2; */
+  padding-top: 36px;
 }
 .van-nav-bar {
   background: #f6f6f6;

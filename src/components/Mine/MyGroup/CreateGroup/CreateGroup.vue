@@ -15,7 +15,7 @@
           label="邀请理由:"
           autosize
           type="textarea"
-        />-->
+        /> -->
         <van-cell title="选择成员:" is-link :value="result.length" @click="chooseMember()" />
       </van-cell-group>
     </div>
@@ -38,7 +38,7 @@ export default {
   data() {
     return {
       groupName: this.$store.state.groupName,
-      // invinviteReasonite:"",
+      // invinviteReason:"",
       result: "",
       userInfo: ""
     };

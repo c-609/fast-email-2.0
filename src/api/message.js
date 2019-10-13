@@ -24,11 +24,14 @@ export function getUnreadList(messageId) {
     })
 }
 //标记已读
-export function editRead(userId, messageId) {
+export function editRead(messageId, userIds) {
+    var Info = new FormData();
+    Info.append('messageId', messageId);
+    Info.append('userIds', userIds);
     return request({
         url: '/msg/edit_state_read',
         method: 'post',
-        params: { userId, messageId }
+        data: Info
     })
 }
 
