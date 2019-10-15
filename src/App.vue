@@ -60,7 +60,7 @@ export default {
   },
   watch: {
     showHeight() {
-      if(this.docmHeight != this.showHeight){
+      if(this.docmHeight - this.showHeight >100){
           this.hidshow=false 
       }else{
         this.hidshow = true

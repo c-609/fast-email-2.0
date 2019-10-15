@@ -60,8 +60,8 @@
               :invitor="item.sender"
               :content="item.inviteReason"
               :time="item.time"
-              @refuse="clickRefuse"
-              @agree="clickAgree"
+              @refuse="clickRefuse(item.id,index)"
+              @agree="clickAgree(item.id,index)"
             ></base-invite-cell>
           </div>
         </div>
@@ -76,7 +76,7 @@
 import eventBus from "../../util/eventBus";
 import BaseMsgCell from "./../../common/BaseMsgCell";
 import BaseInviteCell from "./../../common/BaseInviteCell";
-import {getUnreadMsg,getSendingMsg,editMsgState,getNotice} from "../../api/message"
+import {getUnreadMsg,getSendingMsg,editMsgState,getNotice,updateInvite} from "../../api/message"
 import IDBMethods from "../../api/IndexedDbMethods"
 export default {
   components: {
@@ -148,7 +148,8 @@ export default {
       this.userInfo = result[0];
     });
     let userId = localStorage.getItem('userId');
-    getNotice(userId,1).then(res=>{
+    let ids = localStorage.getItem('ids');
+    getNotice(userId,1,ids).then(res=>{
       this.inviteMsgs = res.data.data;
     })
   },
@@ -186,6 +187,9 @@ export default {
   },
   methods: {
     onRefresh(){
+      getNotice(userId,1).then(res=>{
+      this.inviteMsgs = res.data.data;
+      })
       let userId = localStorage.getItem('userId');
       let dbName = userId+"NewMsg"
       let _this = this;
@@ -228,12 +232,29 @@ export default {
       this.$router.push("/send_msg_detail");
     },
     //拒绝群组邀请
-    clickRefuse() {
-      alert("拒绝");
+    clickRefuse(id,index) {
+      updateInvite(id,2).then(res=>{
+        if(res.data.code == 0){
+          var ids = localStorage.getItem('ids');
+          ids= ids+","+id;
+          localStorage.setItem('ids',ids);
+          Toast("已拒绝");
+          this.inviteMsgs(index,1);
+        }
+      })
     },
     //同意群组邀请
-    clickAgree() {
-      alert("同意");
+    clickAgree(id,index) {
+      var _this = this;
+      updateInvite(id,1).then(res=>{
+        if(res.data.code == 0){
+          var ids = localStorage.getItem('ids');
+          ids= ids+","+id;
+          localStorage.setItem('ids',ids);
+          Toast("已同意");
+          _this.inviteMsgs.splice(index,1);
+        }
+      })
     }
   }
 };

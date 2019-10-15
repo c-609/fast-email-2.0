@@ -65,12 +65,13 @@
           </template>
       </van-cell>
     </div>
-    <div class="logout">退出登录</div>
+    <div class="logout" @click="logout">退出登录</div>
   </div>
 </template>
 
 <script>
 import IDBMethods from '../../api/IndexedDbMethods'
+import IDB from '../../api/IndexedDb'
 import {getUserInformation} from '../../api/login'
 export default {
   data(){
@@ -90,6 +91,18 @@ export default {
     goPath(url) {
       this.$router.push(url);
     },
+    logout(){
+      console.log("1111111111");
+      let userId = localStorage.getItem('userId');
+      let dbName = userId+"NewMsg";
+      // IDB.deleteDB(userId, res=>{
+      //   console.log(res)
+      // })
+      // IDB.deleteDB(dbName, res=>{
+      //   console.log(res)
+      // })
+      this.$router.push('/login')
+    }
     // clickSetting() {
     //   this.$router.push('/sys_msg')
     // }

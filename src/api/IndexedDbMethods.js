@@ -1,6 +1,7 @@
 //二次封装的方法
 import IndexedDB from './IndexedDb'
 export default {
+
     //添加用户数据（覆盖旧数据）
     putUserInfo: function(dbName, storeName, data) { //数据库名  表名  数据
         let DataBase = null;

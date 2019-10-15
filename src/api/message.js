@@ -83,11 +83,21 @@ export function sendNotice(senderId, groupId, type, getterIds, inviteReason) {
     })
 }
 //获取群组邀请
-export function getNotice(getterId, type) {
+export function getNotice(getterId, type, existedNoticeIds) {
     return request({
         url: '/msg/notice/getter',
-        methods: 'get',
-        params: { getterId, type }
+        method: 'get',
+        params: { getterId, type, existedNoticeIds }
+    })
+
+}
+
+//修改群组邀请状态 拒绝或同意
+export function updateInvite(id, type) {
+    return request({
+        url: '/msg/notice',
+        method: 'put',
+        params: { id, type }
     })
 
 }

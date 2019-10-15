@@ -66,13 +66,11 @@ export default {
     eventBus.$emit("sendMsgDetail", this.msg);
   },
   created(){
-    let userId = localStorage.getItem('userId');
-    getSendingMsg(userId).then(res=>{
-      if(res.data.code == 0){
-        this.msgList = res.data.data;
-        this.show_loading = false
-      }
-    })
+
+    var _this = this;
+    setTimeout(function(){
+      _this.getMsg();
+    },500)
   },
   computed: {
     tables() {
@@ -102,6 +100,15 @@ export default {
     }
   },
   methods: {
+    getMsg(){
+      let userId = localStorage.getItem('userId');
+      getSendingMsg(userId).then(res=>{
+        if(res.data.code == 0){
+          this.msgList = res.data.data;
+          this.show_loading = false
+        }
+      })
+    },
     onRefresh(){
       let userId = localStorage.getItem('userId');
       getSendingMsg(userId).then(res=>{
