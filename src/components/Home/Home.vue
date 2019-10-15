@@ -56,9 +56,9 @@
         <div class="footer invite">
           <div v-for="(item,index) in inviteMsgs" :key="index">
             <base-invite-cell
-              :name="item.name"
-              :invitor="item.invitor"
-              :content="item.content"
+              :name="item.group.name"
+              :invitor="item.sender"
+              :content="item.inviteReason"
               :time="item.time"
               @refuse="clickRefuse"
               @agree="clickAgree"
@@ -76,7 +76,7 @@
 import eventBus from "../../util/eventBus";
 import BaseMsgCell from "./../../common/BaseMsgCell";
 import BaseInviteCell from "./../../common/BaseInviteCell";
-import {getUnreadMsg,getSendingMsg,editMsgState} from "../../api/message"
+import {getUnreadMsg,getSendingMsg,editMsgState,getNotice} from "../../api/message"
 import IDBMethods from "../../api/IndexedDbMethods"
 export default {
   components: {
@@ -127,20 +127,7 @@ export default {
       receiveMsgs: [],
       sendMsgs:'',
       inviteMsgs: [
-        //群组邀请消息
-        {
-          name: "查寝",
-          invitor: "tj",
-          content:
-            "今天晚上要查寝室啦今天晚上要查寝室啦今天晚上要查寝室啦今天晚上要查寝室啦今天晚上要查寝室啦",
-          time: "2018-03-25"
-        },
-        {
-          title: "查寝",
-          invitor: "ha",
-          content: "今天晚上要查寝室啦",
-          time: "2018-03-25"
-        }
+        
       ],
 
       receiveNumber: '', //新到通知数量
@@ -157,9 +144,13 @@ export default {
       this.receiveNumber = this.receiveMsgs.length;
     });
     let db  = localStorage.getItem("userId");
-        IDBMethods.getUserInfo(db , "UserInfo", result => {
-          this.userInfo = result[0];
-        });
+    IDBMethods.getUserInfo(db , "UserInfo", result => {
+      this.userInfo = result[0];
+    });
+    let userId = localStorage.getItem('userId');
+    getNotice(userId,1).then(res=>{
+      this.inviteMsgs = res.data.data;
+    })
   },
   mounted(){
     let userId = localStorage.getItem('userId');

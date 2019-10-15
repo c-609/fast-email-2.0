@@ -66,3 +66,28 @@ export function editMsgState(messageId, userId) {
     })
 
 }
+
+//发送群组邀请
+export function sendNotice(senderId, groupId, type, getterIds, inviteReason) {
+    var Info = new FormData();
+    Info.append('senderId', senderId);
+    Info.append('groupId', groupId);
+    Info.append('type', type);
+    Info.append('getterIds', getterIds);
+    Info.append('inviteReason', inviteReason);
+    return request({
+        url: '/msg/notice',
+        method: 'post',
+        data: Info
+
+    })
+}
+//获取群组邀请
+export function getNotice(getterId, type) {
+    return request({
+        url: '/msg/notice/getter',
+        methods: 'get',
+        params: { getterId, type }
+    })
+
+}

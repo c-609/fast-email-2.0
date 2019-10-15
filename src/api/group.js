@@ -1,11 +1,11 @@
 import request from 'axios'
-export  function  createGroup(createUserId,  name,  userIds)  {    
+export  function  createGroup(createUserId,  name,  userIds, inviteReason)  {    
     return  request({        
         url:   '/manage/group/create',
                 
         method:   'post',
                 
-        params:  {  createUserId,  name,  userIds  }    
+        params:  {  createUserId,  name,  userIds, inviteReason  }    
     })
 }
 //请求用户创建的群组

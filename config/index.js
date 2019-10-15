@@ -11,17 +11,17 @@ module.exports = {
         assetsSubDirectory: 'static',
         assetsPublicPath: '/',
         proxyTable: {
-            '/': {
-                target: 'http://119.29.101.166:9000',
-                changeOrigin: true,
-                pathRewrite: {
-                    '^/': ''
-                }
-            },
-            '/ws/*': {
-                target: 'http://119.29.101.166:9000',
-                ws: true
-            }
+            // '/': {
+            //     target: 'http://119.29.101.166:9000',
+            //     changeOrigin: true,
+            //     pathRewrite: {
+            //         '^/': ''
+            //     }
+            // },
+            // '/ws/*': {
+            //     target: 'http://119.29.101.166:9000',
+            //     ws: true
+            // }
         },
 
         // Various Dev Server settings

@@ -8,14 +8,14 @@
     <div class="groupinfo">
       <van-cell-group>
         <van-field v-model="groupName" placeholder="请输入群组名" label="群组名称:" />
-        <!-- <van-field
+        <van-field
           v-model="inviteReason"
           placeholder="请输入邀请理由"
           rows="1"
           label="邀请理由:"
           autosize
           type="textarea"
-        /> -->
+        />
         <van-cell title="选择成员:" is-link :value="result.length" @click="chooseMember()" />
       </van-cell-group>
     </div>
@@ -34,11 +34,12 @@
 import eventBus from "../../../../util/eventBus";
 import IDBMethods from "../../../../api/IndexedDbMethods";
 import { createGroup } from "../../../../api/group";
+import { sendNotice } from "../../../../api/message";
 export default {
   data() {
     return {
       groupName: this.$store.state.groupName,
-      // invinviteReason:"",
+      inviteReason:"",
       result: "",
       userInfo: ""
     };
@@ -79,15 +80,24 @@ export default {
       var createUserId = this.userInfo.userId;
       var userIds = ids.join(",");
       var name = this.groupName;
+      var inviteReason = this.inviteReason;
       if (name == "") Toast("请输入群组名");
       else {
         if (ids.length == 0) Toast("请选择群成员");
         else {
           console.log(createUserId, name, userIds);
-          createGroup(createUserId, name, userIds).then(res => {
-            Toast(res.data.msg);
-            this.clear();
-            this.$router.push("/my_group");
+          createGroup(createUserId, name, userIds,inviteReason).then(res => {
+            if(res.data.code == 0){
+              sendNotice(createUserId, res.data.data, 1, userIds, inviteReason).then(res=>{
+                if(res.data.code == 0){
+                  Toast("创建成功");
+                  this.clear();
+                  this.$router.push("/my_group");
+                }
+                
+              })
+              
+            }
           });
         }
       }
