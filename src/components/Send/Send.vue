@@ -66,7 +66,7 @@ export default {
     var _this = this;
     setTimeout(function() {
       _this.getMsg();
-    }, 500);
+    }, 300);
   },
   computed: {
     tables() {
