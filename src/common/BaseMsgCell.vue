@@ -1,27 +1,26 @@
 <template>
   <div id="message">
-    <van-swipe-cell :disabled="disabled" >
+    <van-swipe-cell :disabled="disabled">
       <div class="status"></div>
       <van-cell
         :border="false"
         :title="title"
-        
         :label="content"
         :value-class="statusRed"
         @click="click"
         class="click"
       ></van-cell>
       <div v-if="status!=null">
-      <van-tag color="#ff943e" class="status" v-if="status=='0'">New</van-tag>
+        <van-tag color="#ff943e" class="status" v-if="status=='0'">New</van-tag>
       </div>
 
       <div v-if="all!=null">
-      <van-tag color="#ff943e" class="status" v-if="read!=all" >{{read}}/{{all}}</van-tag>
-      <van-tag type="primary" class="status" v-if="read==all  " >已读完</van-tag>
+        <van-tag color="#ff943e" class="status" v-if="read!=all">{{read}}/{{all}}</van-tag>
+        <van-tag type="primary" class="status" v-if="read==all  ">已读完</van-tag>
       </div>
       <span class="cell_time">{{time}}</span>
       <template slot="right">
-        <van-button square type="danger" class="btn" text="删除" @click="handleDelete" />
+        <van-button square type="danger" class="btn" text="删除" v-if="remove" @click="handleDelete" />
         <van-button square type="primary" class="btn" text="置顶" v-if="top" @click="handleTop" />
       </template>
     </van-swipe-cell>
@@ -41,11 +40,11 @@ export default {
       type: Number
     },
     //已读人数
-    read:{
+    read: {
       type: Number
     },
     //总共人数
-    all:{
+    all: {
       type: Number
     },
     //内容
@@ -67,6 +66,11 @@ export default {
     },
     //top是否显示置顶，默认显示true
     top: {
+      type: Boolean,
+      default: true
+    },
+    //是否显示删除，默认显示true
+    remove: {
       type: Boolean,
       default: true
     }
@@ -97,7 +101,7 @@ export default {
   position: relative;
   z-index: 999;
   float: right;
-  color: #969799
+  color: #969799;
 }
 .status {
   margin-top: -52px;

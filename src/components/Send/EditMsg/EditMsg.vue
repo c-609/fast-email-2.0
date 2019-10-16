@@ -166,6 +166,7 @@ export default {
               ).then(res => {
                 Toast(res.data.msg);
                 this.clearAll();
+                this.$store.commit("setActive",2);
                 this.$router.push("/send");
               });
             }

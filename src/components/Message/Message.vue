@@ -4,6 +4,7 @@
     <div class="header">
       <van-nav-bar title="收到" fixed></van-nav-bar>
     </div>
+    <div class="content">
     <van-pull-refresh v-model="isLoading" @refresh="onRefresh" id="refresh" >
       <div class="content">
       <van-search
@@ -32,6 +33,7 @@
     <!-- <receive-msg-detail ></receive-msg-detail> -->
     <van-loading color="#1989fa" class="load" v-show="show_loading"/>
     <span class="msg" v-show="show_msg">暂无任何通知</span>
+  </div>
   </div>
   
 </template>
@@ -245,4 +247,8 @@ export default {
   color: #969799;
   font-size: 14px;
 }
+.content{
+  margin-bottom: 52px;
+}
+ 
 </style>

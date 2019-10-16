@@ -8,6 +8,7 @@
     <div class="groupInfo">
       <p>群组名称: {{groupInfo.groupName}}</p>
       <p>创建时间: {{groupInfo.createTime}}</p>
+      <!-- <div>创建理由: {{groupInfo.inviteReason}}</div> -->
     </div>
     <div class="member">
       <van-cell title="查看所有成员" icon="friends-o" is-link :value="memberNum+'人'" @click="view_all_member()" />

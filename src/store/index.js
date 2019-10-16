@@ -23,12 +23,13 @@ export default new Vuex.Store({
         deptUsers: [], //已选择机构请求到的用户
 
         groupName: "", //创建群组时的qunm
+        inviteReason:"",//创建群组时的邀请理由
     },
     mutations: {
         setActive(state, active) {
             state.active = active;
         },
-        getTab(state, tab) {
+        setTab(state, tab) {
             state.tab = tab;
         },
 
@@ -73,6 +74,9 @@ export default new Vuex.Store({
         },
         setGroupName(state, groupName) {
             state.groupName = groupName;
+        },
+        setInviteReason(state, inviteReason) {
+            state.inviteReason = inviteReason;
         }
 
     }

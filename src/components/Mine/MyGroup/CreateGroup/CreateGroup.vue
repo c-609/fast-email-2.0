@@ -39,7 +39,7 @@ export default {
   data() {
     return {
       groupName: this.$store.state.groupName,
-      inviteReason:"",
+      inviteReason:this.$store.state.groupName,
       result: "",
       userInfo: ""
     };
@@ -57,7 +57,9 @@ export default {
     clear() {
       var tree = [];
       var groupName = "";
+      var inviteReason = "";
       this.$store.commit("setGroupName", groupName);
+      this.$store.commit("setInviteReason", inviteReason);
       this.$store.commit("setTree", tree);
     },
     onClickLeft() {
@@ -66,6 +68,7 @@ export default {
     },
     chooseMember() {
       this.$store.commit("setGroupName", this.groupName);
+       this.$store.commit("setInviteReason", this.inviteReason);
       this.$router.push("/choose_member");
     },
     removeReceiver(index) {

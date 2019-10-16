@@ -3,7 +3,7 @@
     <!-- 头部 -->
     <div class="header">
       <van-nav-bar title="发出通知" left-arrow @click-left="onClickLeft" @click-right="onClickRight">
-        <van-icon name="delete" slot="right" color="#191f25" size="18" />
+        <!-- <van-icon name="delete" slot="right" color="#191f25" size="18" /> -->
       </van-nav-bar>
     </div>
 

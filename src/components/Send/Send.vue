@@ -6,49 +6,46 @@
         <van-icon class-prefix="my-icon" name="edit" slot="right" color="#191f25" size="18" />
       </van-nav-bar>
     </div>
-      <van-pull-refresh v-model="isLoading" @refresh="onRefresh"> 
-        <van-search
-            v-model="search"
-            placeholder="请输入搜索关键词"
-            shape="round"
-            class="search"
-        ></van-search>
-        <template v-for="(item,index) in MsgList">
-          <base-msg-cell
-            :key="index"
-            :title="item.title"
-            :read="item.readNum"
-            :all="item.number"
-            :content="item.content|ellipsis"
-            :time="item.time"
-            statusRed="red"
-            @handleDelete="handleDelete(item)"
-            @handleTop="handleTop(item)"
-            @click="clickMsg(item)"
-          ></base-msg-cell>
-        </template>
-      </van-pull-refresh>
-      <van-loading color="#1989fa" class="load" v-show="show_loading"/>
-      <span class="msg" v-show="show_msg">暂无任何通知</span>
+    <div class="content">
+    <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+      <van-search v-model="search" placeholder="请输入搜索关键词" shape="round" class="search"></van-search>
+      <template v-for="(item,index) in MsgList">
+        <base-msg-cell
+          :key="index"
+          :title="item.title"
+          :read="item.readNum"
+          :all="item.number"
+          :content="item.content|ellipsis"
+          :time="item.time"
+          statusRed="red"
+          :remove="false"
+          :top="false"
+          @click="clickMsg(item)"
+        ></base-msg-cell>
+      </template>
+    </van-pull-refresh>
+    <van-loading color="#1989fa" class="load" v-show="show_loading" />
+    <span class="msg" v-show="show_msg">暂无任何通知</span>
+  </div>
   </div>
 </template>
 
 <script>
 import eventBus from "./../../util/eventBus";
 import BaseMsgCell from "./../../common/BaseMsgCell";
-import {getSendingMsg} from "../../api/message"
+import { getSendingMsg } from "../../api/message";
 export default {
   components: {
     BaseMsgCell
   },
   data() {
     return {
-      show_msg:false,
-      show_loading:true,
-      isLoading:false,
-      search:'',
-      msgList:'',
-      MsgList:'',
+      show_msg: false,
+      show_loading: true,
+      isLoading: false,
+      search: "",
+      msgList: "",
+      MsgList: "",
       msg: ""
     };
   },
@@ -65,12 +62,11 @@ export default {
   beforeDestroy() {
     eventBus.$emit("sendMsgDetail", this.msg);
   },
-  created(){
-
+  created() {
     var _this = this;
-    setTimeout(function(){
+    setTimeout(function() {
       _this.getMsg();
-    },500)
+    }, 500);
   },
   computed: {
     tables() {
@@ -92,35 +88,41 @@ export default {
   watch: {
     tables() {
       this.MsgList = this.tables;
-      if(this.MsgList == ''){
+      if (this.MsgList == "") {
         this.show_msg = true;
-      }else{
+      } else {
         this.show_msg = false;
       }
     }
   },
   methods: {
-    getMsg(){
-      let userId = localStorage.getItem('userId');
-      getSendingMsg(userId).then(res=>{
-        if(res.data.code == 0){
+    getMsg() {
+      let userId = localStorage.getItem("userId");
+      getSendingMsg(userId).then(res => {
+        if (res.data.code == 0) {
           this.msgList = res.data.data;
-          this.show_loading = false
+          this.show_loading = false;
         }
-      })
+      });
     },
-    onRefresh(){
-      let userId = localStorage.getItem('userId');
-      getSendingMsg(userId).then(res=>{
-      if(res.data.code == 0){
-        this.msgList = res.data.data;
-        this.isLoading = false;
-        this.$notify({ type: 'primary', message: '刷新成功',duration:500 });
-      }
-    }).catch(err =>{
-      this.isLoading = false;
-        this.$notify({ type: 'danger', message: '刷新成功',duration:500 });
-    })
+    onRefresh() {
+      let userId = localStorage.getItem("userId");
+      getSendingMsg(userId)
+        .then(res => {
+          if (res.data.code == 0) {
+            this.msgList = res.data.data;
+            this.isLoading = false;
+            this.$notify({
+              type: "primary",
+              message: "刷新成功",
+              duration: 500
+            });
+          }
+        })
+        .catch(err => {
+          this.isLoading = false;
+          this.$notify({ type: "danger", message: "刷新成功", duration: 500 });
+        });
     },
     //编辑通知
     onClickRight() {
@@ -146,7 +148,7 @@ export default {
 </script>
 
 <style scoped>
-.search{
+.search {
   margin-top: 44px;
 }
 .van-nav-bar {
@@ -158,20 +160,25 @@ export default {
 .van-nav-bar__arrow {
   font-size: 18px;
 }
-.load{
-  position:fixed;
-  top:50%;
+.load {
+  position: fixed;
+  top: 50%;
   margin-top: -20px;
   left: 50%;
   margin-left: -20px;
 }
-.msg{
-  position:fixed;
-  top:50%;
+.msg {
+  position: fixed;
+  top: 50%;
   margin-top: -30px;
   left: 50%;
   margin-left: -42px;
   color: #969799;
   font-size: 14px;
 }
+.content{
+  margin-bottom: 52px;
+}
+ 
+
 </style>
