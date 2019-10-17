@@ -2,7 +2,7 @@
   <div class="viewMyGroup">
     <div class="header">
       <van-nav-bar :title="groupInfo.groupName" left-arrow @click-left="onClickLeft">
-        <van-icon name="delete" slot="right" color="#191f25" size="18" />
+        <!-- <van-icon name="delete" slot="right" color="#191f25" size="18" /> -->
       </van-nav-bar>
     </div>
     <div class="groupInfo">
