@@ -53,8 +53,8 @@ export default {
     //内容长度大于8，用 ...代替其他内容
     ellipsis(value) {
       if (!value) return "";
-      if (value.length > 8) {
-        return value.slice(0, 8) + "......";
+      if (value.length > 15) {
+        return value.slice(0, 15) + "......";
       }
       return value;
     }

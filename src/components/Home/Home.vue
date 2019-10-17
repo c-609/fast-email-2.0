@@ -33,7 +33,7 @@
                 :disabled="true"
                 :title="item.senderName"
                 :status="item.status"
-                :content="item.content"
+                :content="item.content|ellipsis"
                 :time="item.time"
                 @click="clickReceiveMsg(item)"
               ></base-msg-cell>
@@ -55,7 +55,7 @@
                 :title="item.title"
                 :read="item.readNum"
                 :all="item.number"
-                :content="item.content"
+                :content="item.content|ellipsis"
                 :time="item.time"
                 @click="clickSendMsg(item)"
               ></base-msg-cell>
@@ -121,6 +121,16 @@ export default {
       msg: ""
     };
   },
+   filters: {
+    //内容长度大于8，用 ...代替其他内容
+    ellipsis(value) {
+      if (!value) return "";
+      if (value.length > 15) {
+        return value.slice(0, 15) + "...";
+      }
+      return value;
+    }
+  },
   created() {
     let dbName = localStorage.getItem("userId") + "NewMsg";
     IDBMethods.getAllMsg(dbName, "NewMsg", 0, result => {
@@ -172,6 +182,7 @@ export default {
     getNotice(userId, 1, ids).then(res => {
       this.inviteMsgs = res.data.data;
       console.log(this.inviteMsgs);
+    
     });
   },
   mounted() {
