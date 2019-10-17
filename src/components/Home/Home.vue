@@ -181,6 +181,7 @@ export default {
     let ids = localStorage.getItem("ids");
     getNotice(userId, 1, ids).then(res => {
       this.inviteMsgs = res.data.data;
+      this.inviteNumber = res.data.data.length;
       console.log(this.inviteMsgs);
     
     });
