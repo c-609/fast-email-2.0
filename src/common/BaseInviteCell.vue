@@ -2,8 +2,8 @@
   <div class="cell">
     <div>
       <van-field disabled label="群组名称 ：" v-model="name" />
-      <van-field disabled label="邀请人 ：" v-model="invitor" />
-      <van-field disabled label="邀请理由 ：" v-model="content" />
+      <!-- <van-field disabled label="邀请人 ：" v-model="invitor" /> -->
+      <!-- <van-field disabled label="邀请理由 ：" v-model="content" /> -->
       <van-field disabled label="邀请时间 ：" v-model="time" />
     </div>
     <div>

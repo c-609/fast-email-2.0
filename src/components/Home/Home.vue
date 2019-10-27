@@ -73,8 +73,6 @@
                 v-for="(item,index) in inviteMsgs"
                 :key="index"
                 :name="item.group.name"
-                :invitor="item.sender"
-                :content="item.inviteReason"
                 :time="item.time"
                 @refuse="clickRefuse(item.id,index)"
                 @agree="clickAgree(item.id,index)"
