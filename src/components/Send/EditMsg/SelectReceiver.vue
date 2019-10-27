@@ -1,7 +1,8 @@
 <template>
   <div class="viewOrganization">
     <div class="header">
-      <van-nav-bar title="我的机构" left-arrow @click-left="goBack" fixed></van-nav-bar>
+      <van-nav-bar title="我的机构" left-arrow @click-left="goBack" fixed @click-right="onClickRight">
+        <van-button type="info" slot="right" size="small" @click="onClickRight">确认</van-button></van-nav-bar>
     </div>
     <div class="content">
       <org-list :data="list" :key="list.parentId" @goNext="goNext" @updateData="updateData"></org-list>
@@ -75,6 +76,115 @@ export default {
   //   // eventBus.$off("selectList");
   },
   methods: {
+    //点击确认按钮
+    onClickRight(){
+       //放回上一级
+      var checked = 0; //本级被选择的数目
+      var currentList;
+
+      if (this.currentList == "") {
+        currentList = this.list;
+      } else {
+        currentList = this.currentList;
+      }
+
+      //判断本级数据是否全选和存在半选，确定返回上一级的状态
+      var halfChecked = 0;
+      for (var i = 0; i < currentList.data.length; i++) {
+        if (currentList.data[i].status == 1) {
+          checked++;
+        } else if (currentList.data[i].status == -1) {
+          halfChecked = -1;
+        }
+      }
+      if (checked == currentList.data.length) {
+        currentList.parentStatus = 1;
+      } else if (checked == 0) {
+        if (halfChecked == -1) {
+          currentList.parentStatus = -1;
+        } else {
+          currentList.parentStatus = 0;
+        }
+      } else {
+        currentList.parentStatus = -1;
+      }
+
+      this.tree[currentList.parentId] = currentList;
+      this.stack.pop();
+
+      //退出页面,处理选择的接收者
+      
+        var result = new Array(); //最后发送精确到用户，userId,name
+        var deptIds = new Array(); //所选部门id
+        var users = new Array(); //所选用户
+
+        //筛选出用户和部门
+        for (var i = 0; i < this.tree.length; i++) {
+          if (this.tree[i] != undefined) {
+            if (this.tree[i].parentStatus != 0) {
+              if (this.tree[i].data != undefined) {
+                for (var j = 0; j < this.tree[i].data.length; j++) {
+                  if (this.tree[i].data[j].status == 1) {
+                    var obj = new Object();
+                    //用户id
+                    if (this.tree[i].data[j].userId != undefined) {
+                      obj.userId = this.tree[i].data[j].userId;
+                      obj.name = this.tree[i].data[j].name;
+                      users.push(obj);
+                    } else {
+                      deptIds.push(this.tree[i].data[j].id);
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        //有机构被选
+        if (deptIds.length > 0) {
+          var depts = deptIds.join(",");
+          getOrgUsers(depts).then(res => {
+            var data = res.data.data;
+            for (var j = 0; j < data.length; j++) {
+              var obj = new Object();
+              obj.userId = data[j].userId;
+              obj.name = data[j].name;
+              result.push(obj);
+              // result[data[j].userId] = data[j].name;
+            }
+
+            //有用户被选
+            if (users.length > 0) {
+              for (var i = 0; i < users.length; i++) {
+                var obj = new Object();
+                obj.userId = users[i].userId;
+                obj.name = users[i].name;
+                result.push(obj);
+              }
+            }
+
+            this.result = result;
+            this.$store.commit("setDeptUsers", this.result);
+             this.$router.push("/receiver_list");
+          });
+        } else {
+          if (users.length > 0) {
+            for (var i = 0; i < users.length; i++) {
+              var obj = new Object();
+                obj.userId = users[i].userId;
+                obj.name = users[i].name;
+                result.push(obj);
+            }
+          }
+
+          this.result = result;
+          this.$store.commit("setDeptUsers", this.result);        
+         this.$router.push("/receiver_list");
+      }
+     
+    },
+
     //通过id判断要请求的数据tree中是否存在，返回 0不存在，1存在
     findDataInTree(id) {
       if (this.tree[id] == null || this.tree[id] == undefined) {

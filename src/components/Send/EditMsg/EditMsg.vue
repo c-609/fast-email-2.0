@@ -125,7 +125,7 @@ export default {
       //  console.log(this.$store.state.active);
       // this.$router.push("/send");
 
-      this.$router.go(-1);
+      this.$router.push("/send");
     },
 
     //发送通知
