@@ -1,7 +1,9 @@
 <template>
   <div class="viewOrganization">
     <div class="header">
-      <van-nav-bar title="查看学院机构" left-arrow @click-left="goBack" fixed></van-nav-bar>
+      <van-nav-bar title="查看学院机构" left-arrow @click-left="goBack" fixed>
+         <van-button type="info" slot="right" size="small" @click="onClickRight">确认</van-button>
+      </van-nav-bar>
     </div>
     <div class="content">
       <org-cell v-for="item in list.data" :key="item.id" :data="item" @goNext="goNext"></org-cell>
@@ -38,6 +40,11 @@ export default {
   },
 
   methods: {
+    //右上角确认按钮
+    onClickRight(){
+      this.$router.push("/mine");
+    },
+
     //进入下一级，item为当前点击数据
     goNext(item) {
       var temp;
