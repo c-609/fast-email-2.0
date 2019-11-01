@@ -3,6 +3,8 @@
     <div class="header">
       <van-nav-bar title="我的机构" left-arrow @click-left="goBack" fixed></van-nav-bar>
     </div>
+    
+    
     <div class="content">
       <org-list :data="list" :key="list.parentId" @goNext="goNext" @updateData="updateData"></org-list>
     </div>
@@ -313,6 +315,13 @@ export default {
 </script>
 
 <style scoped>
+.center {
+  top: 100px;
+  position: absolute;
+  width: 100%;
+  height: 50px;
+  background-color: pink;
+} 
 .van-nav-bar .van-icon {
   color: #191f25;
 }

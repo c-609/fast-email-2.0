@@ -62,7 +62,9 @@ export default {
     },
     //删除
     handleDelete(e) {
-      alert(e.title);
+      let dbName = localStorage.getItem('userId')+"NewMsg";
+      IDBMethods.deleteMsg(dbName,"NewMsg",e.id);
+      this.msgList.splice(e.id, 1);
     },
     //点击通知，查看详情
     clickMsg(e) {

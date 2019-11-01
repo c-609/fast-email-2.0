@@ -22,7 +22,7 @@ export default {
     return{
       user:'',
       isLogin:false,
-      useraccount:'test1-update',
+      useraccount:'zxm',
       password:'123456'
     }
   },

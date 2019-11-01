@@ -107,6 +107,19 @@ export default {
             },
         );
     },
+    //根据Id删除消息
+    deleteMsg: function(dbName, storeName, key) {
+        let DataBase = null;
+        IndexedDB.openDB(dbName, 1, DataBase, {
+                name: storeName,
+                key: "id"
+            },
+            function(db) {
+                let DataBase = db;
+                IndexedDB.deleteData(DataBase, storeName, key);
+            },
+        );
+    },
     //修改消息状态
     editMessageStatus: function(dbName, storeName, key, status) {
         let DataBase = null;
