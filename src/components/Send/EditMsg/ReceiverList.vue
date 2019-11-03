@@ -14,8 +14,8 @@
 
     <!-- 选择群组 -->
     <van-popup v-model="show" @open="openPopup" @close="closePopup">
-      <van-nav-bar title="选择群组"   @click-left="onClickLeft" @click-right="onClickRight">
-         <van-button type="info" slot="right" size="small" @click="closePopup">确认</van-button>
+      <van-nav-bar title="选择群组" @click-left="onClickLeft" @click-right="onClickRight">
+        <van-button type="info" slot="right" size="small" @click="closePopup">确认</van-button>
       </van-nav-bar>
       <van-checkbox-group v-model="selectedGroups">
         <van-cell-group>
@@ -55,7 +55,7 @@ export default {
       role: this.$store.state.role,
       groupUsers: this.$store.state.groupUsers,
       deptUsers: this.$store.state.deptUsers,
-      usersNum:0
+      usersNum: 0
     };
   },
   watch: {
@@ -63,7 +63,6 @@ export default {
       this.selectedGroupsTemp = 1;
     },
     groupUsers() {
-
       this.result = [];
       // this.result = this.deptUsers;
 
@@ -77,7 +76,7 @@ export default {
           );
         }
       }
- 
+
       if (this.groupUsers.length != 0) {
         for (var i = 0; i < this.groupUsers.length; i++) {
           var _this = this;
@@ -90,7 +89,6 @@ export default {
       }
       this.usersNum = this.getUserIds().length;
     }
-    
   },
   created() {
     // console.log(this.result);
@@ -106,10 +104,10 @@ export default {
     //     this.result[this.deptUsers[i].userId] = this.deptUsers[i].name;
     //   }
     // }
-   
+
     this.result = [];
     // this.result = this.deptUsers;
-   
+
     if (this.deptUsers.length != 0) {
       for (var i = 0; i < this.deptUsers.length; i++) {
         var _this = this;
@@ -120,7 +118,7 @@ export default {
         );
       }
     }
-    
+
     if (this.groupUsers.length != 0) {
       for (var i = 0; i < this.groupUsers.length; i++) {
         var _this = this;
@@ -135,13 +133,13 @@ export default {
   },
   beforeDestroy() {
     //将已选人员id数组传给editMsg
-    var userIds = this.getUserIds(); 
-    eventBus.$emit("userIds", userIds); 
+    var userIds = this.getUserIds();
+    eventBus.$emit("userIds", userIds);
     this.$store.commit("setResult", this.result);
     this.$store.commit("setGroupUsers", this.groupUsers);
   },
   methods: {
-    getUserIds(){
+    getUserIds() {
       var userIds = [];
       for (var i = 0; i < this.result.length; i++) {
         if (this.result[i]) userIds.push(i);
@@ -149,9 +147,7 @@ export default {
       return userIds;
     },
     onClickLeft() {
-      
-      
-      this.$router.go(-1);
+      this.$router.push("/edit_msg");
     },
     onClickRight() {},
     //移除收件人

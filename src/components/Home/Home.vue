@@ -291,7 +291,11 @@ export default {
       updateInvite(id, 2).then(res => {
         if (res.data.code == 0) {
           var ids = localStorage.getItem("ids");
-          ids = ids + "," + id;
+          if(ids == null){
+            ids = id;
+          }else{
+            ids = ids + "," + id;
+          }
           localStorage.setItem("ids", ids);
           Toast("已拒绝");
           this.inviteMsgs.splice(index, 1);
@@ -305,7 +309,11 @@ export default {
       updateInvite(id, 1).then(res => {
         if (res.data.code == 0) {
           var ids = localStorage.getItem("ids");
-          ids = ids + "," + id;
+          if(ids == null){
+            ids = id;
+          }else{
+            ids = ids + "," + id;
+          }
           localStorage.setItem("ids", ids);
           Toast("已同意");
           _this.inviteMsgs.splice(index, 1);

@@ -5,6 +5,7 @@
     </van-cell>
     <van-popup v-model="showInfo"  :style="{ height: '100%', width: '100%' }">
       <van-nav-bar title="查看用户" left-arrow @click-left="back" fixed>
+        <van-button type="info" slot="right" size="small" @click="onClickRight">确认</van-button>
       </van-nav-bar>
       <div class="detail">
         <van-field disabled v-model="data.name" label="姓名"  />
@@ -31,6 +32,10 @@ export default {
     }
   },
   methods: {
+    //右上角确认按钮
+    onClickRight(){
+        this.$router.push("/mine");
+    },
     back(){
       this.showInfo = false;
     },

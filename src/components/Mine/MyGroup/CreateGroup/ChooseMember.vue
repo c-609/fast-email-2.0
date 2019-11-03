@@ -2,7 +2,7 @@
   <div>
     <div class="header">
       <van-nav-bar title="创建群组" left-arrow @click-left="goBack" fixed>
-        <!-- <van-button slot="right" size="small" type="info" @click="confirm">确认</van-button> -->
+        <van-button slot="right" size="small" type="info" @click="confirm">确认</van-button>
       </van-nav-bar>
     </div>
 
@@ -64,7 +64,9 @@ export default {
   },
   methods: {
     confirm() {
-      this.exitChooseMenber();
+       while (this.stack.length != 0) {
+        this.goBack();
+      }
     },
     //通过id判断要请求的数据tree中是否存在，返回 0不存在，1存在
     findDataInTree(id) {
@@ -252,11 +254,31 @@ export default {
                     users.push(obj);
                   } else {
                     deptIds.push(this.tree[i].data[j].id);
-                  }
+                  }   
                 }
+                if (this.tree[i].data[j].status == 0) {
+                    if (this.tree[this.tree[i].data[j].id] != undefined) {
+                      this.tree[this.tree[i].data[j].id].parentStatus = 0;
+                      for (
+                        var h = 0;
+                        h < this.tree[this.tree[i].data[j].id].data.length;
+                        h++
+                      ) {
+                        this.tree[this.tree[i].data[j].id].data[h].status = 0;
+                      }
+                    }
+                  }
               }
             }
           }
+          if (this.tree[i].parentStatus == 0) {
+              for (var n = 0; n < this.tree[i].data.length; n++) {
+                this.tree[i].data[n].status = 0;
+                if (this.tree[this.tree[i].data[n].id] != undefined) {
+                  this.tree[this.tree[i].data[n].id].parentStatus = 0;
+                }
+              }
+            }
         }
       }
 

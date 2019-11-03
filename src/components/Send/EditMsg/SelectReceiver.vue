@@ -1,7 +1,9 @@
 <template>
   <div class="viewOrganization">
     <div class="header">
-      <van-nav-bar title="我的机构" left-arrow @click-left="goBack" fixed></van-nav-bar>
+      <van-nav-bar title="我的机构" left-arrow @click-left="goBack" fixed @click-right="onClickRight">
+        <van-button type="info" slot="right" size="small" @click="onClickRight">确认</van-button>
+      </van-nav-bar>
     </div>
     
     
@@ -71,12 +73,19 @@ export default {
   },
   beforeDestroy() {
     this.$store.commit("setDeptUsers", this.result);
-  //   console.log(this.result);
-  //   //将发送请求得到的所有数据以及选择的所有用户传给ReceicverList页面
-  //   // eventBus.$emit("selectReceiver", this.result);
-  //   // eventBus.$off("selectList");
+    // console.log(this.tree );
+    //   //将发送请求得到的所有数据以及选择的所有用户传给ReceicverList页面
+    //   // eventBus.$emit("selectReceiver", this.result);
+    //   // eventBus.$off("selectList");
   },
   methods: {
+    //点击确认按钮
+    onClickRight() {
+      while (this.stack.length != 0) {
+        this.goBack();
+      }
+    },
+
     //通过id判断要请求的数据tree中是否存在，返回 0不存在，1存在
     findDataInTree(id) {
       if (this.tree[id] == null || this.tree[id] == undefined) {
@@ -244,6 +253,27 @@ export default {
                       deptIds.push(this.tree[i].data[j].id);
                     }
                   }
+
+                  if (this.tree[i].data[j].status == 0) {
+                    if (this.tree[this.tree[i].data[j].id] != undefined) {
+                      this.tree[this.tree[i].data[j].id].parentStatus = 0;
+                      for (
+                        var h = 0;
+                        h < this.tree[this.tree[i].data[j].id].data.length;
+                        h++
+                      ) {
+                        this.tree[this.tree[i].data[j].id].data[h].status = 0;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            if (this.tree[i].parentStatus == 0) {
+              for (var n = 0; n < this.tree[i].data.length; n++) {
+                this.tree[i].data[n].status = 0;
+                if (this.tree[this.tree[i].data[n].id] != undefined) {
+                  this.tree[this.tree[i].data[n].id].parentStatus = 0;
                 }
               }
             }
@@ -251,6 +281,7 @@ export default {
         }
 
         //有机构被选
+
         if (deptIds.length > 0) {
           var depts = deptIds.join(",");
           getOrgUsers(depts).then(res => {
@@ -275,23 +306,23 @@ export default {
 
             this.result = result;
             this.$store.commit("setDeptUsers", this.result);
-            
-            this.$router.go(-1);
+
+            this.$router.push("/receiver_list");
           });
         } else {
           if (users.length > 0) {
             for (var i = 0; i < users.length; i++) {
               var obj = new Object();
-                obj.userId = users[i].userId;
-                obj.name = users[i].name;
-                result.push(obj);
+              obj.userId = users[i].userId;
+              obj.name = users[i].name;
+              result.push(obj);
             }
           }
 
           this.result = result;
           this.$store.commit("setDeptUsers", this.result);
-           
-          this.$router.go(-1);
+
+          this.$router.push("/receiver_list");
         }
       } else {
         var parentId = this.stack[this.stack.length - 1].parentId;
