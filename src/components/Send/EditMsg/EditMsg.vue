@@ -13,6 +13,9 @@
       <van-field v-model="role.roleCNName" label="发件身份 ：" placeholder="请选择发件身份" @click="show=true" />
       <!-- 发件身份弹框 -->
       <van-popup v-model="show" @open="openPopup" @close="closePopup">
+        <van-nav-bar title="选择发件身份" >
+          <van-button type="info" slot="right" size="small" @click="selectRole">确认</van-button>
+        </van-nav-bar>
         <van-radio-group v-model="role">
           <van-cell-group>
             <van-cell v-for="item in roles" :key="item.id" :title="item.roleCNName" clickable>
@@ -166,7 +169,7 @@ export default {
               ).then(res => {
                 Toast(res.data.msg);
                 this.clearAll();
-                this.$store.commit("setActive",2);
+                this.$store.commit("setActive", 2);
                 this.$router.push("/send");
               });
             }
@@ -187,6 +190,12 @@ export default {
           console.log(this.senderInfo);
         });
       }
+    },
+
+    //选择身份的确认按钮
+    selectRole() {
+      this.show = false;
+      this.closePopup();
     },
 
     //关闭发件身份弹出层时触发
