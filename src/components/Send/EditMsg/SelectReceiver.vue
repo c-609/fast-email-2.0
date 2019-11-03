@@ -54,13 +54,13 @@ export default {
       var list = new Object();
       var temp;
       console.log(res);
-      temp = this.findDataInTree(res.data.data.parentId);
-      if (temp == 1) {
-        list = this.tree[res.data.data.parentId];
-        this.list = list;
-        this.stack.push(list);
-        this.tree[list.parentId] = list;
-      } else {
+      // temp = this.findDataInTree(res.data.data.parentId);
+      // if (temp == 1) {
+      //   list = this.tree[res.data.data.parentId];
+      //   this.list = list;
+      //   this.stack.push(list);
+      //   this.tree[list.parentId] = list;
+      // } else {
         var data = new Array();
         data.push(res.data.data);
         list.parentId = res.data.data.parentId;
@@ -69,7 +69,7 @@ export default {
         this.list = list;
         this.stack.push(list);
         this.tree[this.list.parentId] = this.list;
-      }
+      // }
     });
   },
   beforeDestroy() {
