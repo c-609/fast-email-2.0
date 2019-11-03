@@ -13,9 +13,12 @@ import store from "./store/index";
 import "./assets/css/iconfont.css"
 FastClick.attach(document.body);
 Vue.config.productionTip = false
-Axios.defaults.baseURL = 'http://119.29.101.166:9000'
-Vue.use(Vant);
 
+//不打包时用电脑运行要注释掉此处话
+Axios.defaults.baseURL = 'http://119.29.101.166:9000'
+
+Vue.use(Vant);
+Vue.prototype.$Axios = Axios;
 
 /* eslint-disable no-new */
 new Vue({

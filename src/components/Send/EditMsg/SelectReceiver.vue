@@ -48,35 +48,32 @@ export default {
       this.$store.commit("setTree", this.tree);
     }
   },
-  created() { console.log("3232")
-  console.log("roleId: "+this.role.roleId);
-   console.log("deptId: "+this.role.deptId)
-  //  getChildOrg(1).then(res => {
-  //     console.log("eee")
-  //   });
-  //   console.log("rrr");
-    getOrg(2, 8).then(res => {
-     console.log("xxx");
-    //   // var list = { parentId: "", data: [], parentStatus: "" };
-    //   var list = new Object();
-    //   var temp;
-    //   //console.log(res.data.data.parentId);
-    //   temp = this.findDataInTree(res.data.data.parentId);
-    //   if (temp == 1) {
-    //     list = this.tree[res.data.data.parentId];
-    //     this.list = list;
-    //     this.stack.push(list);
-    //     this.tree[list.parentId] = list;
-    //   } else {
-    //     var data = new Array();
-    //     data.push(res.data.data);
-    //     list.parentId = res.data.data.parentId;
-    //     list.parentStatus = 0;
-    //     list.data = data;
-    //     this.list = list;
-    //     this.stack.push(list);
-    //     this.tree[this.list.parentId] = this.list;
-    //   }
+  created() {
+    //此处必须发这种请求，否则用hbuild打包成app后报404；
+  this.$Axios.get('/manage/dept/get_user_top_organization',{
+     params: {
+       roleId:this.role.roleId,
+       deptId:this.role.deptId
+      }
+    }).then(res => {    
+      var list = new Object();
+      var temp;
+      temp = this.findDataInTree(res.data.data.parentId);
+      if (temp == 1) {
+        list = this.tree[res.data.data.parentId];
+        this.list = list;
+        this.stack.push(list);
+        this.tree[list.parentId] = list;
+      } else {
+        var data = new Array();
+        data.push(res.data.data);
+        list.parentId = res.data.data.parentId;
+        list.parentStatus = 0;
+        list.data = data;
+        this.list = list;
+        this.stack.push(list);
+        this.tree[this.list.parentId] = this.list;
+      }
     });
   },
   beforeDestroy() {
@@ -294,13 +291,15 @@ export default {
           var depts = deptIds.join(",");
           getOrgUsers(depts).then(res => {
             var data = res.data.data;
+            console.log(res.data.data)
+            if(data!=null){
             for (var j = 0; j < data.length; j++) {
               var obj = new Object();
               obj.userId = data[j].userId;
               obj.name = data[j].name;
               result.push(obj);
               // result[data[j].userId] = data[j].name;
-            }
+            }}
 
             //有用户被选
             if (users.length > 0) {

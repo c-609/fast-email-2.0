@@ -29,7 +29,9 @@ export default {
   created() {
     var data;
     var list = new Object();
+
     getChildOrg(1).then(res => {
+      console.log("yyyy");
       data = res.data.data;
       list.parentId = 1;
       list.data = data;
