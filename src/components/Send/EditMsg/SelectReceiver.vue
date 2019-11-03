@@ -51,28 +51,32 @@ export default {
   created() { console.log("3232")
   console.log("roleId: "+this.role.roleId);
    console.log("deptId: "+this.role.deptId)
-    getOrg(this.role.roleId, this.role.deptId).then(res => {
+  //  getChildOrg(1).then(res => {
+  //     console.log("eee")
+  //   });
+  //   console.log("rrr");
+    getOrg(2, 8).then(res => {
      console.log("xxx");
-      // var list = { parentId: "", data: [], parentStatus: "" };
-      var list = new Object();
-      var temp;
-      console.log(res.data.data.parentId);
-      temp = this.findDataInTree(res.data.data.parentId);
-      if (temp == 1) {
-        list = this.tree[res.data.data.parentId];
-        this.list = list;
-        this.stack.push(list);
-        this.tree[list.parentId] = list;
-      } else {
-        var data = new Array();
-        data.push(res.data.data);
-        list.parentId = res.data.data.parentId;
-        list.parentStatus = 0;
-        list.data = data;
-        this.list = list;
-        this.stack.push(list);
-        this.tree[this.list.parentId] = this.list;
-      }
+    //   // var list = { parentId: "", data: [], parentStatus: "" };
+    //   var list = new Object();
+    //   var temp;
+    //   //console.log(res.data.data.parentId);
+    //   temp = this.findDataInTree(res.data.data.parentId);
+    //   if (temp == 1) {
+    //     list = this.tree[res.data.data.parentId];
+    //     this.list = list;
+    //     this.stack.push(list);
+    //     this.tree[list.parentId] = list;
+    //   } else {
+    //     var data = new Array();
+    //     data.push(res.data.data);
+    //     list.parentId = res.data.data.parentId;
+    //     list.parentStatus = 0;
+    //     list.data = data;
+    //     this.list = list;
+    //     this.stack.push(list);
+    //     this.tree[this.list.parentId] = this.list;
+    //   }
     });
   },
   beforeDestroy() {
