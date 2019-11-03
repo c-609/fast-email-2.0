@@ -5,6 +5,8 @@
         <van-button type="info" slot="right" size="small" @click="onClickRight">确认</van-button>
       </van-nav-bar>
     </div>
+    
+    
     <div class="content">
       <org-list :data="list" :key="list.parentId" @goNext="goNext" @updateData="updateData"></org-list>
     </div>
@@ -345,6 +347,13 @@ export default {
 </script>
 
 <style scoped>
+.center {
+  top: 100px;
+  position: absolute;
+  width: 100%;
+  height: 50px;
+  background-color: pink;
+} 
 .van-nav-bar .van-icon {
   color: #191f25;
 }

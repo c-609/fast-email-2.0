@@ -73,6 +73,8 @@
                 v-for="(item,index) in inviteMsgs"
                 :key="index"
                 :name="item.group.name"
+                :invitor="item.sender.name"
+                :content="item.inviteReason"
                 :time="item.time"
                 @refuse="clickRefuse(item.id,index)"
                 @agree="clickAgree(item.id,index)"
@@ -222,10 +224,14 @@ export default {
   },
   methods: {
     onRefresh() {
-      getNotice(userId, 1).then(res => {
-        this.inviteMsgs = res.data.data;
-      });
+      
       let userId = localStorage.getItem("userId");
+       let ids = localStorage.getItem("ids");
+      getNotice(userId, 1,ids).then(res => {
+        console.log(res)
+        this.inviteMsgs = res.data.data;
+        this.inviteNumber = inviteMsgs.length;
+      });
       let dbName = userId + "NewMsg";
       let _this = this;
       IDBMethods.getAllMsgID(dbName, "NewMsg", result => {
@@ -285,10 +291,15 @@ export default {
       updateInvite(id, 2).then(res => {
         if (res.data.code == 0) {
           var ids = localStorage.getItem("ids");
-          ids = ids + "," + id;
+          if(ids == null){
+            ids = id;
+          }else{
+            ids = ids + "," + id;
+          }
           localStorage.setItem("ids", ids);
           Toast("已拒绝");
-          this.inviteMsgs(index, 1);
+          this.inviteMsgs.splice(index, 1);
+          this.inviteNumber -= 1;
         }
       });
     },
@@ -298,10 +309,15 @@ export default {
       updateInvite(id, 1).then(res => {
         if (res.data.code == 0) {
           var ids = localStorage.getItem("ids");
-          ids = ids + "," + id;
+          if(ids == null){
+            ids = id;
+          }else{
+            ids = ids + "," + id;
+          }
           localStorage.setItem("ids", ids);
           Toast("已同意");
           _this.inviteMsgs.splice(index, 1);
+          this.inviteNumber -= 1;
         }
       });
     }

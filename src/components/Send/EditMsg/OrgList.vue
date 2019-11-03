@@ -4,9 +4,9 @@
       <van-col span="3" class="radio">
         <van-cell>
           <template slot="title">
-            <img src="/static/yuan.png" v-if="item.status==0" @click="select(item.status,index)" />
-            <img src="/static/heng.png" v-else-if="item.status==-1" @click="select(item.status,index)" />
-            <img src="/static/gou.png" v-else-if="item.status==1" @click="select(item.status,index)" />
+            <img src="../../../assets/img/yuan.png" v-if="item.status==0" @click="select(item.status,index)" />
+            <img src="../../../assets/img/heng.png" v-else-if="item.status==-1" @click="select(item.status,index)" />
+            <img src="../../../assets/img/gou.png" v-else-if="item.status==1" @click="select(item.status,index)" />
           </template>
         </van-cell>
       </van-col>
