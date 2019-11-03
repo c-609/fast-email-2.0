@@ -5,8 +5,7 @@
         <van-button type="info" slot="right" size="small" @click="onClickRight">确认</van-button>
       </van-nav-bar>
     </div>
-    
-    
+
     <div class="content">
       <org-list :data="list" :key="list.parentId" @goNext="goNext" @updateData="updateData"></org-list>
     </div>
@@ -36,7 +35,7 @@ export default {
       //   ]
       // },
 
-      list: {parentId:-1}, //对象，当前界面的数据对象 {parentId，parentStatus，data[]}
+      list: { parentId: -1 }, //对象，当前界面的数据对象 {parentId，parentStatus，data[]}
       currentList: "", //本级最新的数据对象
       stack: [], //数组，存储路过的数据对象，便于返回,list
       tree: this.$store.state.tree, // 数组，存放请求到的所有数据对象,将parentId作为数组的下标
@@ -51,16 +50,16 @@ export default {
   },
   created() {
     getOrg(this.role.roleId, this.role.deptId).then(res => {
-      var list = new Object();
+      var list = { parentId: "", data: [], parentStatus: "" };
       var temp;
       console.log(res);
-      // temp = this.findDataInTree(res.data.data.parentId);
-      // if (temp == 1) {
-      //   list = this.tree[res.data.data.parentId];
-      //   this.list = list;
-      //   this.stack.push(list);
-      //   this.tree[list.parentId] = list;
-      // } else {
+      temp = this.findDataInTree(res.data.data.parentId);
+      if (temp == 1) {
+        list = this.tree[res.data.data.parentId];
+        this.list = list;
+        this.stack.push(list);
+        this.tree[list.parentId] = list;
+      } else {
         var data = new Array();
         data.push(res.data.data);
         list.parentId = res.data.data.parentId;
@@ -69,7 +68,7 @@ export default {
         this.list = list;
         this.stack.push(list);
         this.tree[this.list.parentId] = this.list;
-      // }
+      }
     });
   },
   beforeDestroy() {
@@ -353,7 +352,7 @@ export default {
   width: 100%;
   height: 50px;
   background-color: pink;
-} 
+}
 .van-nav-bar .van-icon {
   color: #191f25;
 }
