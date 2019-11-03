@@ -48,11 +48,15 @@ export default {
       this.$store.commit("setTree", this.tree);
     }
   },
-  created() {
+  created() { console.log("3232")
+  console.log("roleId: "+this.role.roleId);
+   console.log("deptId: "+this.role.deptId)
     getOrg(this.role.roleId, this.role.deptId).then(res => {
-      var list = { parentId: "", data: [], parentStatus: "" };
+     console.log("xxx");
+      // var list = { parentId: "", data: [], parentStatus: "" };
+      var list = new Object();
       var temp;
-      console.log(res);
+      console.log(res.data.data.parentId);
       temp = this.findDataInTree(res.data.data.parentId);
       if (temp == 1) {
         list = this.tree[res.data.data.parentId];
