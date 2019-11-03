@@ -34,7 +34,7 @@ export default {
       //   ]
       // },
 
-      list: "", //对象，当前界面的数据对象 {parentId，parentStatus，data[]}
+      list: {parentId:-1}, //对象，当前界面的数据对象 {parentId，parentStatus，data[]}
       currentList: "", //本级最新的数据对象
       stack: [], //数组，存储路过的数据对象，便于返回,list
       tree: this.$store.state.tree, // 数组，存放请求到的所有数据对象,将parentId作为数组的下标
@@ -51,6 +51,7 @@ export default {
     getOrg(this.role.roleId, this.role.deptId).then(res => {
       var list = new Object();
       var temp;
+      console.log(res);
       temp = this.findDataInTree(res.data.data.parentId);
       if (temp == 1) {
         list = this.tree[res.data.data.parentId];
